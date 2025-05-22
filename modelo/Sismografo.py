@@ -1,5 +1,5 @@
 class Sismografo:
-    def __init__(self, fechaAdquisicion, identificadorSismografo, nroSerie):
-        self.fechaAdquisicion = fechaAdquisicion
-        self.identificadorSismografo = identificadorSismografo
-        self.nroSerie = nroSerie
+    def __init__(self, fecha_adquisicion, identificador_sismografo, nro_serie):
+        self.fecha_adquisicion = fecha_adquisicion
+        self.identificor_sismografo = identificador_sismografo
+        self.nro_serie = nro_serie

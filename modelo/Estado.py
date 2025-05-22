@@ -1,8 +1,8 @@
 class Estado:
-    def __init__(self, ambito, nombreEstado, esBloqueado, esReachazado):
+    def __init__(self, ambito, nombre_estado, es_bloqueado, es_rechazado):
         self.ambito = ambito
-        self.nombreEstado = nombreEstado
-        self.esBloqueado = esBloqueado
-        self.esRechazado = esRechazado
+        self.nombreEstado = nombre_estado
+        self.esBloqueado = es_bloqueado
+        self.esRechazado = es_rechazado
 
         
