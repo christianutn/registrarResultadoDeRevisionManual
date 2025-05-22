@@ -1,16 +1,16 @@
 from datetime import datetime
 
 class CambioEstado:
-    def __init__(self, fechaHoraInicio: datetime, estado: Estado):
-        self.__fechaHoraInicio= fechaHoraInicio
-        self.__fechaHoraFin = None
+    def __init__(self, fecha_hora_inicio: datetime, estado: Estado):
+        self.__fecha_hora_inicio = fecha_hora_inicio
+        self.__fecha_hora_fin = None
         self.__estado = estado
 
     def esActual(self) -> bool:
         """
         Retorna True si el cambio está activo (sin fecha de fin).
         """
-        return self.__fechaHoraFin is None
+        return self.__fecha_hora_fin is None
 
     def esPteRevision(self) -> bool:
         """
@@ -19,7 +19,7 @@ class CambioEstado:
         return self.__estado.esPteRevision()
 
     def setFechaHoraFin(self, fecha_hora: datetime) -> None:
-        self.__fechaHoraFin = fecha_hora
+        self.__fecha_hora_fin = fecha_hora
 
     @classmethod
     def new(cls, estado: Estado) -> 'CambioEstado':
