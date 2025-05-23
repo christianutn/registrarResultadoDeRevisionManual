@@ -5,4 +5,5 @@ class Estado:
         self.esBloqueado = es_bloqueado
         self.esRechazado = es_rechazado
 
-        
+    def esPteRevision(self) -> bool:
+        return self.nombre_estado == "pendiente_revision"

@@ -6,4 +6,14 @@ class EventoSismico:
         self.longitud_epicentro = longitud_epicentro
         self.longitud_hipocentro =  longitud_hipocentro
         self.valor_magnitud = valor_magnitud
+        self.origen_de_generacion = None
+        self.clasificacion_sismo = None
+        self.alcance_sismo = None
+        self.series_temporales = []
+        self.cambios_estado = None
         
+
+        def agregar_serie_temporal(self, serie_temporal):
+            self.series_temporales.append(serie_temporal)
+        def obtener_series_temporales(self):
+            return self.series_temporales

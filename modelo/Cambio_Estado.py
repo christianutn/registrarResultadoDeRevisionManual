@@ -13,13 +13,10 @@ class CambioEstado:
         return self.__fecha_hora_fin is None
 
     def esPteRevision(self) -> bool:
-        """
-        Pregunta al objeto Estado si está pendiente de revisión.
-        """
-        return self.__estado.esPteRevision()
+        return self.estado.esPteRevision()
 
     def setFechaHoraFin(self, fecha_hora: datetime) -> None:
-        self.__fecha_hora_fin = fecha_hora
+        self.fecha_hora_fin = fecha_hora
 
     @classmethod
     def new(cls, estado: Estado) -> 'CambioEstado':

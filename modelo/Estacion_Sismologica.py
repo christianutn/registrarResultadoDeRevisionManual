@@ -7,4 +7,3 @@ class EstacionSismologica:
         self.longitud = longitud
         self.nombre = nombre
         self.nro_certificacion_adquisicion = nro_certificacion_adquisicion
-        
