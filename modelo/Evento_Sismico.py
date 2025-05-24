@@ -29,9 +29,9 @@ class EventoSismico:
     def get_longitud_hipocentro(self):
         return self.longitud_hipocentro
 
-    def get_estado_actual(self):
+    def esActual(self):
         for ce in self.cambio_estado:
-            if ce.es_actual():
+            if ce.esActual():
                 return ce
         return None
 
@@ -59,8 +59,8 @@ class EventoSismico:
             "latitud_hipocentro": self.latitud_hipocentro,
             "longitud_hipocentro": self.longitud_hipocentro,
             "alcance_sismo": self.alcance_sismo.get_descripcion() if self.alcance_sismo else None,
-            "origen_generacion": self.origen_generacion.get_nombre() if self.origen_generacion else None,
-            "estado_actual": self.get_estado_actual().estado.nombre_estado if self.get_estado_actual() else "N/A"
+            "origen_generacion": self.origen_de_generacion.get_nombre() if self.origen_de_generacion else None,
+            "estado_actual": self.esActual().estado.nombre_estado if self.esActual() else "N/A"
         }
 
     def obtener_series_temporales(self):
@@ -76,7 +76,10 @@ class EventoSismico:
         return self.obtener_datos_evento()
 
     def buscar_eventos_para_revisar(self):
-        estado_actual = self.get_estado_actual()
+        estado_actual = self.esActual()
         if estado_actual:
-            return estado_actual.es_pte_revision()
+            if estado_actual.es_pte_revision():
+                return True
+            elif estado_actual.es_auto_detectado():
+                return True
         return False

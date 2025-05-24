@@ -14,8 +14,27 @@ class PantallaAdmSismo:
     def __init__(self, gestor_sismo):
         self.gestor_sismo = gestor_sismo
 
-    def mostrar_eventos_para_revisar(self):
-        eventos = self.gestor_sismo.buscar_eventos_para_revisar()
+    def mostrar_menu_opciones(self):
+        layout = [
+            [sg.Text("Seleccione una opción:")],
+            [sg.Button("Registrar resultado de revisión manual"), sg.Button("Salir")]
+        ]
+        window = sg.Window("Menú Principal", layout)
+        opcion = None
+        while True:
+            event, _ = window.read()
+            if event == sg.WINDOW_CLOSED or event == "Salir":
+                opcion = "Salir"
+                break
+            if event == "Registrar resultado de revisión manual":
+                opcion = "Registrar resultado de revisión manual"
+                break
+        window.close()
+        return opcion
+
+    def habilitarVentana(self):
+        # Llama al método registrarResRevManual del gestor
+        eventos = self.gestor_sismo.registrarResRevManual()
         if not eventos:
             sg.popup("No hay eventos pendientes de revisión en este momento.")
             return []
@@ -75,7 +94,7 @@ if __name__ == "__main__":
         longitud_hipocentro=-71.1,
         valor_magnitud=5.5
     )
-    evento1.crear_cambio_estado("Auto detectado")
+    evento1.crear_cambio_estado("auto_detectado")
     gestor.agregarEvento(evento1)
 
     evento2 = EventoSismico(
@@ -86,7 +105,7 @@ if __name__ == "__main__":
         longitud_hipocentro=-70.6,
         valor_magnitud=4.8
     )
-    evento2.crear_cambio_estado("Pendiente revision")
+    evento2.crear_cambio_estado("pendiente_revision")
     gestor.agregarEvento(evento2)
 
     evento3 = EventoSismico(
@@ -97,7 +116,7 @@ if __name__ == "__main__":
         longitud_hipocentro=-72.1,
         valor_magnitud=6.1
     )
-    evento3.crear_cambio_estado("Bloqueado")
+    evento3.crear_cambio_estado("bloqueado")
     gestor.agregarEvento(evento3)
 
     serie_valores = [0.1, 0.2, 0.3, 0.2, 0.1]
@@ -110,40 +129,46 @@ if __name__ == "__main__":
     evento1.agregar_serie_temporal(serie_temporal1)
     print(f"Número de series temporales en Evento 1: {len(evento1.obtener_series_temporales())}\n")
 
-    eventos_a_revisar = pantalla.mostrar_eventos_para_revisar()
+    # Mostrar menú principal antes de habilitar ventana
+    opcion = pantalla.mostrar_menu_opciones()
+    if opcion == "Registrar resultado de revisión manual":
+        pantalla.habilitarVentana()
+    else:
+        print("Saliendo del sistema.")
+        exit()
 
-    (evento2)
-    if eventos_a_revisar:
-        print("\n--- Simulación de bloqueo de evento ---")
-        pantalla.opcion_bloquear_evento(eventos_a_revisar[0]) 
-        print(f"Estado del Evento 2 después de la acción: {evento2.get_estado_actual().estado.nombre_estado}")
+    # (evento2)
+    # if eventos_a_revisar:
+    #     print("\n--- Simulación de bloqueo de evento ---")
+    #     pantalla.opcion_bloquear_evento(eventos_a_revisar[0]) 
+    #     print(f"Estado del Evento 2 después de la acción: {evento2.get_estado_actual().estado.nombre_estado}")
 
     
-    print("\n--- Eventos pendientes de revisión después del bloqueo ---")
-    pantalla.mostrar_eventos_para_revisar()
+    # print("\n--- Eventos pendientes de revisión después del bloqueo ---")
+    # pantalla.habilitarVentana()
 
  
-    print("\n--- Escenario 2: Rechazar un evento ---")
-    evento4 = EventoSismico(
-        fecha_hora_ocurrencia=datetime(2024, 1, 10, 8, 0, 0),
-        latitud_epicentro=-35.0,
-        longitud_epicentro=-71.0,
-        latitud_hipocentro=-35.1,
-        longitud_hipocentro=-71.1,
-        valor_magnitud=5.9
-    )
-    evento4.crear_cambio_estado("Pendiente revision")
-    gestor.agregarEvento(evento4)
+    # print("\n--- Escenario 2: Rechazar un evento ---")
+    # evento4 = EventoSismico(
+    #     fecha_hora_ocurrencia=datetime(2024, 1, 10, 8, 0, 0),
+    #     latitud_epicentro=-35.0,
+    #     longitud_epicentro=-71.0,
+    #     latitud_hipocentro=-35.1,
+    #     longitud_hipocentro=-71.1,
+    #     valor_magnitud=5.9
+    # )
+    # evento4.crear_cambio_estado("Pendiente revision")
+    # gestor.agregarEvento(evento4)
 
 
-    eventos_a_revisar_2 = pantalla.mostrar_eventos_para_revisar()
-    if eventos_a_revisar_2:
-        print("\n--- Simulación de rechazo de evento ---")
-        pantalla.opcion_rechazar_evento(eventos_a_revisar_2[0]) 
-        print(f"Estado del Evento 4 después de la acción: {evento4.get_estado_actual().estado.nombre_estado}")
+    # eventos_a_revisar_2 = pantalla.habilitarVentana()
+    # if eventos_a_revisar_2:
+    #     print("\n--- Simulación de rechazo de evento ---")
+    #     pantalla.opcion_rechazar_evento(eventos_a_revisar_2[0]) 
+    #     print(f"Estado del Evento 4 después de la acción: {evento4.get_estado_actual().estado.nombre_estado}")
 
 
 
 
-    print("\n--- Eventos pendientes de revisión después del rechazo ---")
-    pantalla.mostrar_eventos_para_revisar()
+    # print("\n--- Eventos pendientes de revisión después del rechazo ---")
+    # pantalla.habilitarVentana()

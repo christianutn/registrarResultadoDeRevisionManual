@@ -7,14 +7,17 @@ class CambioEstado:
         self.fecha_hora_fin = None
         self.estado = estado
 
-    def es_actual(self) -> bool:
+    def esActual(self) -> bool:
         """
         Retorna True si el cambio está activo (sin fecha de fin).
         """
         return self.fecha_hora_fin is None
 
     def es_pte_revision(self) -> bool:
-        return self.estado.esPteRevision()
+        return self.estado.es_pte_revision()
+    
+    def es_auto_detectado(self) -> bool:
+        return self.estado.es_auto_detectado()
 
     def setFechaHoraFin(self, fecha_hora: datetime) -> None:
         self.fecha_hora_fin = fecha_hora
