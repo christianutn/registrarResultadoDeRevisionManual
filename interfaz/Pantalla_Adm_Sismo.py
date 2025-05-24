@@ -33,14 +33,14 @@ class PantallaAdmSismo:
         return opcion
 
     def habilitarVentana(self):
-        # Llama al método registrarResRevManual del gestor
-        eventos = self.gestor_sismo.registrarResRevManual()
-        if not eventos:
+        # Llama al método ordenar_Eventos_Fecha_Hora_Ocurrencia del gestor
+        datos_eventos = self.gestor_sismo.ordenar_Eventos_Fecha_Hora_Ocurrencia()
+        if not datos_eventos:
             sg.popup("No hay eventos pendientes de revisión en este momento.")
             return []
         layout = [
             [sg.Text("Eventos Sísmicos Pendientes de Revisión")],
-            [sg.Listbox(values=[f"{i+1}. {e.obtener_datos_evento()['fecha_hora_ocurrencia']} | Epicentro: ({e.obtener_datos_evento()['latitud_epicentro']}, {e.obtener_datos_evento()['longitud_epicentro']}) | Estado: {e.obtener_datos_evento()['estado_actual']}" for i, e in enumerate(eventos)], size=(80, 10), key="-LISTA-", enable_events=True)],
+            [sg.Listbox(values=[f"{datos['fecha_hora_ocurrencia']} | Epicentro: ({datos['latitud_epicentro']}, {datos['longitud_epicentro']}) | Hipocentro: ({datos['latitud_hipocentro']}, {datos['longitud_hipocentro']}) | Valor magnitud: ({datos['valor_magnitud']})" for datos in datos_eventos], size=(80, 10), key="-LISTA-", enable_events=True)],
             [sg.Button("Bloquear"), sg.Button("Rechazar"), sg.Button("Salir")]
         ]
         window = sg.Window("Eventos para Revisar", layout)
@@ -49,15 +49,15 @@ class PantallaAdmSismo:
             if event == sg.WINDOW_CLOSED or event == "Salir":
                 break
             if event == "Bloquear" and values["-LISTA-"]:
-                idx = [f"{i+1}." for i in range(len(eventos))].index(values["-LISTA-"][0].split()[0])
-                self.bloquear_evento(eventos[idx])
+                idx = [f"{i+1}." for i in range(len(datos_eventos))].index(values["-LISTA-"][0].split()[0])
+                self.bloquear_evento(datos_eventos[idx])
                 sg.popup("Evento bloqueado")
             if event == "Rechazar" and values["-LISTA-"]:
-                idx = [f"{i+1}." for i in range(len(eventos))].index(values["-LISTA-"][0].split()[0])
-                self.rechazar_evento(eventos[idx])
+                idx = [f"{i+1}." for i in range(len(datos_eventos))].index(values["-LISTA-"][0].split()[0])
+                self.rechazar_evento(datos_eventos[idx])
                 sg.popup("Evento rechazado")
         window.close()
-        return eventos
+        return datos_eventos
 
     def bloquear_evento(self, evento):
         self.gestor_sismo.bloquear_evento(evento)
@@ -118,6 +118,50 @@ if __name__ == "__main__":
     )
     evento3.crear_cambio_estado("bloqueado")
     gestor.agregarEvento(evento3)
+    
+    evento4 = EventoSismico(
+        fecha_hora_ocurrencia=datetime(2023, 12, 5, 15, 0, 0),
+        latitud_epicentro=-31.0,
+        longitud_epicentro=-71.5,
+        latitud_hipocentro=-31.1,
+        longitud_hipocentro=-71.6,
+        valor_magnitud=4.2
+    )
+    evento4.crear_cambio_estado("pendiente_revision")
+    gestor.agregarEvento(evento4)
+
+    evento5 = EventoSismico(
+        fecha_hora_ocurrencia=datetime(2023, 11, 20, 18, 30, 0),
+        latitud_epicentro=-30.5,
+        longitud_epicentro=-70.8,
+        latitud_hipocentro=-30.6,
+        longitud_hipocentro=-70.9,
+        valor_magnitud=5.7
+    )
+    evento5.crear_cambio_estado("auto_detectado")
+    gestor.agregarEvento(evento5)
+
+    evento6 = EventoSismico(
+        fecha_hora_ocurrencia=datetime(2023, 10, 30, 8, 45, 0),
+        latitud_epicentro=-32.5,
+        longitud_epicentro=-72.5,
+        latitud_hipocentro=-32.6,
+        longitud_hipocentro=-72.6,
+        valor_magnitud=6.3
+    )
+    evento6.crear_cambio_estado("rechazado")
+    gestor.agregarEvento(evento6)
+
+    evento7 = EventoSismico(
+        fecha_hora_ocurrencia=datetime(2023, 12, 10, 22, 15, 0),
+        latitud_epicentro=-33.2,
+        longitud_epicentro=-71.2,
+        latitud_hipocentro=-33.3,
+        longitud_hipocentro=-71.3,
+        valor_magnitud=3.9
+    )
+    evento7.crear_cambio_estado("pendiente_revision")
+    gestor.agregarEvento(evento7)
 
     serie_valores = [0.1, 0.2, 0.3, 0.2, 0.1]
     serie_temporal1 = SerieTemporal(
@@ -125,6 +169,7 @@ if __name__ == "__main__":
         fecha_hora_inicio_registro_muestras=datetime(2023, 10, 26, 10, 29, 0),
         fecha_hora_registro=datetime(2023, 10, 26, 10, 29, 0),
         frecuencia_muestreo=100.0
+    
     )
     evento1.agregar_serie_temporal(serie_temporal1)
     print(f"Número de series temporales en Evento 1: {len(evento1.obtener_series_temporales())}\n")
@@ -137,38 +182,3 @@ if __name__ == "__main__":
         print("Saliendo del sistema.")
         exit()
 
-    # (evento2)
-    # if eventos_a_revisar:
-    #     print("\n--- Simulación de bloqueo de evento ---")
-    #     pantalla.opcion_bloquear_evento(eventos_a_revisar[0]) 
-    #     print(f"Estado del Evento 2 después de la acción: {evento2.get_estado_actual().estado.nombre_estado}")
-
-    
-    # print("\n--- Eventos pendientes de revisión después del bloqueo ---")
-    # pantalla.habilitarVentana()
-
- 
-    # print("\n--- Escenario 2: Rechazar un evento ---")
-    # evento4 = EventoSismico(
-    #     fecha_hora_ocurrencia=datetime(2024, 1, 10, 8, 0, 0),
-    #     latitud_epicentro=-35.0,
-    #     longitud_epicentro=-71.0,
-    #     latitud_hipocentro=-35.1,
-    #     longitud_hipocentro=-71.1,
-    #     valor_magnitud=5.9
-    # )
-    # evento4.crear_cambio_estado("Pendiente revision")
-    # gestor.agregarEvento(evento4)
-
-
-    # eventos_a_revisar_2 = pantalla.habilitarVentana()
-    # if eventos_a_revisar_2:
-    #     print("\n--- Simulación de rechazo de evento ---")
-    #     pantalla.opcion_rechazar_evento(eventos_a_revisar_2[0]) 
-    #     print(f"Estado del Evento 4 después de la acción: {evento4.get_estado_actual().estado.nombre_estado}")
-
-
-
-
-    # print("\n--- Eventos pendientes de revisión después del rechazo ---")
-    # pantalla.habilitarVentana()

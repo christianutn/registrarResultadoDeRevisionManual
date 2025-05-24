@@ -51,16 +51,17 @@ class EventoSismico:
         nuevo_estado = CambioEstado.crear(nuevo_estado_nombre)
         self.cambio_estado.append(nuevo_estado)
 
-    def obtener_datos_evento(self):
+    def obtener_datos_evento_sismico(self):
         return {
             "fecha_hora_ocurrencia": self.fecha_hora_ocurrencia,
             "latitud_epicentro": self.latitud_epicentro,
             "longitud_epicentro": self.longitud_epicentro,
             "latitud_hipocentro": self.latitud_hipocentro,
             "longitud_hipocentro": self.longitud_hipocentro,
-            "alcance_sismo": self.alcance_sismo.get_descripcion() if self.alcance_sismo else None,
-            "origen_generacion": self.origen_de_generacion.get_nombre() if self.origen_de_generacion else None,
-            "estado_actual": self.esActual().estado.nombre_estado if self.esActual() else "N/A"
+            "valor_magnitud": self.valor_magnitud
+            # "alcance_sismo": self.alcance_sismo.get_descripcion() if self.alcance_sismo else None,
+            # "origen_generacion": self.origen_de_generacion.get_nombre() if self.origen_de_generacion else None,
+            # "estado_actual": self.esActual().estado.nombre_estado if self.esActual() else "N/A"
         }
 
     def obtener_series_temporales(self):
