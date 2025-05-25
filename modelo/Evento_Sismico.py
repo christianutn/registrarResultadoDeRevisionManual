@@ -1,4 +1,7 @@
 from .Cambio_Estado import CambioEstado
+from .Clasificacion_Sismo import inicializar_clasificaciones_mock
+from .Origen_De_Generacion import inicializar_origenes_mock
+from .Alcance_Sismo import inicializar_alcances_mock
 
 class EventoSismico:
     def __init__(self, fecha_hora_ocurrencia, latitud_epicentro, latitud_hipocentro, longitud_epicentro, longitud_hipocentro, valor_magnitud,  cambio_estado):
@@ -85,5 +88,17 @@ class EventoSismico:
                 if ce.es_pte_revision() or ce.es_auto_detectado():
                     return True
         return False
+
+    def validar_y_asignar_clasificacion(self, clasificacion):
+        # Validate and assign classification
+        self.clasificacion_sismo = next((c for c in inicializar_clasificaciones_mock() if c.get_nombre() == clasificacion), None)
+
+    def validar_y_asignar_origen(self, origen):
+        # Validate and assign origin
+        self.origen_de_generacion = next((o for o in inicializar_origenes_mock() if o.get_nombre() == origen), None)
+
+    def validar_y_asignar_alcance(self, alcance):
+        # Validate and assign scope
+        self.alcance_sismo = next((a for a in inicializar_alcances_mock() if a.get_nombre() == alcance), None)
 
 

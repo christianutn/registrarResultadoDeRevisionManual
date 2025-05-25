@@ -25,4 +25,13 @@ class ClasificacionSismo:
     
     def set_nombre(self, nombre):
         self.nombre = nombre
-    
+
+# Función para inicializar clasificaciones de sismos
+
+def inicializar_clasificaciones_mock():
+    return [
+        ClasificacionSismo(0, 60, "Sismo superficial"),
+        ClasificacionSismo(61, 300, "Sismo intermedio"),
+        ClasificacionSismo(301, 650, "Sismo profundo")
+    ]
+

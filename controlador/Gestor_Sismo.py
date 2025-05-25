@@ -40,7 +40,7 @@ class GestorSismo:
     
     def tomar_elecc_evento_sismico(self, evento_seleccionado, accion):
         self.cambiar_estado_evento_sismico(evento_seleccionado, accion)
-        self.evento_seleccionado = evento_seleccionado
+        
         
     def cambiar_estado_evento_sismico(self, evento_seleccionado, accion):
         hora_actual = self.get_fecha_hora_actual()
@@ -55,6 +55,9 @@ class GestorSismo:
         empleado_logueado = self.buscar_usuario_logueado()
         # print(f"Empleado logueado: {empleado_logueado}")
         evento_seleccionado.bloquear(estado_recuperado, hora_actual, empleado_logueado)
+        self.evento_seleccionado = evento_seleccionado
+        datos_evento = self.buscar_datos_evento()
+        
         
         
         # Aquí continuaremos con la lógica para cambiar el estado usando el estado_recuperado y el empleado_logueado
@@ -70,3 +73,4 @@ class GestorSismo:
     
     def buscar_datos_evento(self):
         datos_eventos = self.evento_seleccionado.obtener_datos_evento() 
+        return datos_eventos

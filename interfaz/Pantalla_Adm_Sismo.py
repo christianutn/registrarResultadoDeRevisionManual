@@ -17,6 +17,7 @@ import PySimpleGUI as sg
 from modelo.Usuario import Usuario
 from modelo.Empleado import Empleado
 from modelo.Sesion import Sesion
+from modelo.Clasificacion_Sismo import ClasificacionSismo
 
 # Create a specific employee
 empleado_prueba = Empleado(
@@ -102,8 +103,6 @@ if __name__ == "__main__":
     estados_disponibles = inicializar_estados_mock()
     print(f"Estados disponibles: {[e.nombre_estado for e in estados_disponibles]}\n")
 
-    alcance_mock = AlcanceSismo("Regional", "Lejos")
-    origen_mock = OrigenDeGeneracion("Argentina", "Automático")
     estacion_mock = EstacionSismologica(
         codigo_estacion="EC001",
         documento_certificacion_adq="cert_doc.pdf",
@@ -124,14 +123,21 @@ if __name__ == "__main__":
         latitud_hipocentro=-33.1,
         longitud_hipocentro=-71.1,
         valor_magnitud=5.5,
-        cambio_estado = [CambioEstado(datetime(2023, 10, 26, 10, 30, 0), Estado("auto_detectado", "evento_sismico"), empleado_prueba),
-                         CambioEstado(datetime(2023, 10, 26, 10, 30, 0), Estado("pendiente_revision", "evento_sismico"), empleado_prueba),
-                         CambioEstado(datetime(2023, 10, 26, 10, 30, 0), Estado("bloqueado", "evento_sismico"), empleado_prueba),
-                         CambioEstado(datetime(2023, 10, 26, 10, 30, 0), Estado("pendiente_revision", "evento_sismico"), empleado_prueba),
-                         CambioEstado(datetime(2023, 10, 26, 10, 30, 0), Estado("auto_detectado", "evento_sismico"), empleado_prueba),
-                         CambioEstado(datetime(2023, 10, 26, 10, 30, 0), Estado("rechazado", "evento_sismico"), empleado_prueba),
-                         CambioEstado(datetime(2023, 10, 26, 10, 30, 0), Estado("pendiente_revision", "evento_sismico"), empleado_prueba)]
+        cambio_estado=[
+            CambioEstado(datetime(2023, 10, 26, 10, 30, 0), Estado("auto_detectado", "evento_sismico"), empleado_prueba),
+            CambioEstado(datetime(2023, 10, 26, 10, 30, 0), Estado("pendiente_revision", "evento_sismico"), empleado_prueba),
+            CambioEstado(datetime(2023, 10, 26, 10, 30, 0), Estado("bloqueado", "evento_sismico"), empleado_prueba),
+            CambioEstado(datetime(2023, 10, 26, 10, 30, 0), Estado("pendiente_revision", "evento_sismico"), empleado_prueba),
+            CambioEstado(datetime(2023, 10, 26, 10, 30, 0), Estado("auto_detectado", "evento_sismico"), empleado_prueba),
+            CambioEstado(datetime(2023, 10, 26, 10, 30, 0), Estado("rechazado", "evento_sismico"), empleado_prueba),
+            CambioEstado(datetime(2023, 10, 26, 10, 30, 0), Estado("pendiente_revision", "evento_sismico"), empleado_prueba)
+        ]
     )
+    
+    # Assign valid values for classification, origin, and scope
+    evento1.clasificacion_sismo = ClasificacionSismo(4, 70, "Distancia epicentral hasta 100 km")
+    evento1.origen_de_generacion = OrigenDeGeneracion("Sismo interplaca", "Generado por interacción de placas tectónicas")
+    evento1.alcance_sismo = AlcanceSismo("Sismo local", "Distancia epicentral hasta 100 km")
     
     gestor.agregarEvento(evento1)
     pantalla = PantallaAdmSismo(gestor)
