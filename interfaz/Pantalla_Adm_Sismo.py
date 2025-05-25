@@ -65,7 +65,11 @@ class PantallaAdmSismo:
                 accion = event
                 break
         window.close()
-        return evento_seleccionado, accion
+        self.tomar_elecc_evento_sismico(evento_seleccionado, accion)      
+    
+    def tomar_elecc_evento_sismico(self, evento_seleccionado, accion):
+        self.gestor_sismo.tomar_elecc_evento_sismico(evento_seleccionado, accion)
+        
 
 
 if __name__ == "__main__":
@@ -96,7 +100,7 @@ if __name__ == "__main__":
         longitud_hipocentro=-71.1,
         valor_magnitud=5.5
     )
-    evento1.crear_cambio_estado("auto_detectado")
+    evento1.crear_cambio_estado("auto_detectado", "evento_sismico")
     gestor.agregarEvento(evento1)
 
     evento2 = EventoSismico(
@@ -107,7 +111,7 @@ if __name__ == "__main__":
         longitud_hipocentro=-70.6,
         valor_magnitud=4.8
     )
-    evento2.crear_cambio_estado("pendiente_revision")
+    evento2.crear_cambio_estado("pendiente_revision", "evento_sismico")
     gestor.agregarEvento(evento2)
 
     evento3 = EventoSismico(
@@ -118,7 +122,7 @@ if __name__ == "__main__":
         longitud_hipocentro=-72.1,
         valor_magnitud=6.1
     )
-    evento3.crear_cambio_estado("bloqueado")
+    evento3.crear_cambio_estado("bloqueado", "evento_sismico")
     gestor.agregarEvento(evento3)
     
     evento4 = EventoSismico(
@@ -129,7 +133,7 @@ if __name__ == "__main__":
         longitud_hipocentro=-71.6,
         valor_magnitud=4.2
     )
-    evento4.crear_cambio_estado("pendiente_revision")
+    evento4.crear_cambio_estado("pendiente_revision", "evento_sismico")
     gestor.agregarEvento(evento4)
 
     evento5 = EventoSismico(
@@ -140,7 +144,7 @@ if __name__ == "__main__":
         longitud_hipocentro=-70.9,
         valor_magnitud=5.7
     )
-    evento5.crear_cambio_estado("auto_detectado")
+    evento5.crear_cambio_estado("auto_detectado", "evento_sismico")
     gestor.agregarEvento(evento5)
 
     evento6 = EventoSismico(
@@ -151,7 +155,7 @@ if __name__ == "__main__":
         longitud_hipocentro=-72.6,
         valor_magnitud=6.3
     )
-    evento6.crear_cambio_estado("rechazado")
+    evento6.crear_cambio_estado("rechazado", "evento_sismico")
     gestor.agregarEvento(evento6)
 
     evento7 = EventoSismico(
@@ -162,7 +166,7 @@ if __name__ == "__main__":
         longitud_hipocentro=-71.3,
         valor_magnitud=3.9
     )
-    evento7.crear_cambio_estado("pendiente_revision")
+    evento7.crear_cambio_estado("pendiente_revision", "evento_sismico")
     gestor.agregarEvento(evento7)
 
     serie_valores = [0.1, 0.2, 0.3, 0.2, 0.1]

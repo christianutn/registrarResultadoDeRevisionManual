@@ -1,7 +1,9 @@
 class Estado:
-    def __init__(self, nombre_estado):
+    def __init__(self, nombre_estado, ambito):
         self.nombre_estado = nombre_estado
-
+        self.ambito = ambito
+        
+        
     def es_pte_revision(self):
         if self.nombre_estado == "pendiente_revision":
             return True
@@ -11,14 +13,18 @@ class Estado:
         if self.nombre_estado == "auto_detectado":
             return True
         return False
-       
+    
+    def esAmbitoEventoSismico(self):
+        return self.ambito == "evento_sismico"
 
 # Función fuera de la clase para inicializar estados mock
 
 def inicializar_estados_mock():
     return [
-        Estado("auto_detectado"),
-        Estado("pendiente_revision"),
-        Estado("bloqueado"),
-        Estado("rechazado")
+        Estado("auto_detectado", "evento_sismico"),
+        Estado("pendiente_revision", "evento_sismico"),
+        Estado("bloqueado", "evento_sismico"),
+        Estado("rechazado", "evento_sismico"),
+        Estado("activo", "sismografo"),
+        Estado("inactivo", "sismografo")
     ]

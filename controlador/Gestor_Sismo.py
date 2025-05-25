@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 class GestorSismo:
     def __init__(self):
         self.eventos_sismicos = []
@@ -39,3 +42,12 @@ class GestorSismo:
                 if datos_eventos[j]["fecha_hora_ocurrencia"] > datos_eventos[j + 1]["fecha_hora_ocurrencia"]:
                     datos_eventos[j], datos_eventos[j + 1] = datos_eventos[j + 1], datos_eventos[j]
         return datos_eventos
+    
+    def tomar_elecc_evento_sismico(self, evento_seleccionado, accion):
+        self.cambiar_estado_evento_sismico(evento_seleccionado, accion)
+        
+    def cambiar_estado_evento_sismico(self, evento_seleccionado, accion):
+        hora_actual = self.get_fecha_hora_actual()
+        
+    def get_fecha_hora_actual(self):
+        return datetime.now()
