@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Pantalla_Adm_Sismo",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "interfaz.Pantalla_Adm_Sismo",
+            "console": "integratedTerminal"
+        }
+    ]
+}

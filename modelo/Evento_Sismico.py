@@ -1,7 +1,7 @@
 from .Cambio_Estado import CambioEstado
 
 class EventoSismico:
-    def __init__(self, fecha_hora_ocurrencia, latitud_epicentro, latitud_hipocentro, longitud_epicentro, longitud_hipocentro, valor_magnitud):
+    def __init__(self, fecha_hora_ocurrencia, latitud_epicentro, latitud_hipocentro, longitud_epicentro, longitud_hipocentro, valor_magnitud,  cambio_estado):
         self.fecha_hora_ocurrencia =  fecha_hora_ocurrencia
         self.latitud_epicentro = latitud_epicentro
         self.latitud_hipocentro = latitud_hipocentro
@@ -12,7 +12,7 @@ class EventoSismico:
         self.clasificacion_sismo = None
         self.alcance_sismo = None
         self.series_temporales = []
-        self.cambio_estado = []
+        self.cambio_estado = cambio_estado
         self.estado_actual = None
 
     def get_fecha_hora_ocurrencia(self):
@@ -39,9 +39,13 @@ class EventoSismico:
 
 
     def crear_cambio_estado(self, hora_actual, empleado, estado_actual, estado_recuperado):
-        estado_actual.set_fecha_hora_fin(hora_actual)
-        nuevo_estado = CambioEstado(hora_actual, estado_recuperado, empleado)
-        self.cambio_estado.append(nuevo_estado)
+        # Si hay un estado actual, se le setea la fecha de fin
+        if estado_actual is not None:
+            estado_actual.set_fecha_hora_fin(hora_actual)
+        # Crear el nuevo cambio de estado con la hora actual, el estado (puntero) y el empleado
+        nuevo_cambio_estado = CambioEstado(hora_actual, estado_recuperado, empleado)
+        self.cambio_estado.append(nuevo_cambio_estado)
+        self.estado_actual = nuevo_cambio_estado
 
     def obtener_datos_evento_sismico(self):
         return {
@@ -75,5 +79,5 @@ class EventoSismico:
                 if ce.es_pte_revision() or ce.es_auto_detectado():
                     return True
         return False
-    
-    
+
+

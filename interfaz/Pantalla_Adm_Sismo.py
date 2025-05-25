@@ -54,6 +54,7 @@ class PantallaAdmSismo:
 
     def habilitarVentana(self):        # Llama al método registrarResRevManual del gestor
         datos_eventos_ordenados = self.gestor_sismo.registrarResRevManual()
+        
         self.solicitar_elecc_evento_sismico(datos_eventos_ordenados)
 
     def bloquear_evento(self, evento):
@@ -110,7 +111,7 @@ if __name__ == "__main__":
     )
 
     gestor = GestorSismo(sesion_prueba)
-    pantalla = PantallaAdmSismo(gestor)
+    
 
     evento1 = EventoSismico(
         fecha_hora_ocurrencia=datetime(2023, 10, 26, 10, 30, 0),
@@ -118,76 +119,88 @@ if __name__ == "__main__":
         longitud_epicentro=-71.0,
         latitud_hipocentro=-33.1,
         longitud_hipocentro=-71.1,
-        valor_magnitud=5.5
+        valor_magnitud=5.5,
+        cambio_estado = [CambioEstado(datetime(2023, 10, 26, 10, 30, 0), Estado("auto_detectado", "evento_sismico"), empleado_prueba),
+                         CambioEstado(datetime(2023, 10, 26, 10, 30, 0), Estado("pendiente_revision", "evento_sismico"), empleado_prueba),
+                         CambioEstado(datetime(2023, 10, 26, 10, 30, 0), Estado("bloqueado", "evento_sismico"), empleado_prueba),
+                         CambioEstado(datetime(2023, 10, 26, 10, 30, 0), Estado("pendiente_revision", "evento_sismico"), empleado_prueba),
+                         CambioEstado(datetime(2023, 10, 26, 10, 30, 0), Estado("auto_detectado", "evento_sismico"), empleado_prueba),
+                         CambioEstado(datetime(2023, 10, 26, 10, 30, 0), Estado("rechazado", "evento_sismico"), empleado_prueba),
+                         CambioEstado(datetime(2023, 10, 26, 10, 30, 0), Estado("pendiente_revision", "evento_sismico"), empleado_prueba)]
     )
-    evento1.crear_cambio_estado("auto_detectado", "evento_sismico")
-    gestor.agregarEvento(evento1)
-
-    evento2 = EventoSismico(
-        fecha_hora_ocurrencia=datetime(2023, 11, 15, 14, 0, 0),
-        latitud_epicentro=-34.5,
-        longitud_epicentro=-70.5,
-        latitud_hipocentro=-34.6,
-        longitud_hipocentro=-70.6,
-        valor_magnitud=4.8
-    )
-    evento2.crear_cambio_estado("pendiente_revision", "evento_sismico")
-    gestor.agregarEvento(evento2)
-
-    evento3 = EventoSismico(
-        fecha_hora_ocurrencia=datetime(2023, 12, 1, 9, 0, 0),
-        latitud_epicentro=-32.0,
-        longitud_epicentro=-72.0,
-        latitud_hipocentro=-32.1,
-        longitud_hipocentro=-72.1,
-        valor_magnitud=6.1
-    )
-    evento3.crear_cambio_estado("bloqueado", "evento_sismico")
-    gestor.agregarEvento(evento3)
     
-    evento4 = EventoSismico(
-        fecha_hora_ocurrencia=datetime(2023, 12, 5, 15, 0, 0),
-        latitud_epicentro=-31.0,
-        longitud_epicentro=-71.5,
-        latitud_hipocentro=-31.1,
-        longitud_hipocentro=-71.6,
-        valor_magnitud=4.2
-    )
-    evento4.crear_cambio_estado("pendiente_revision", "evento_sismico")
-    gestor.agregarEvento(evento4)
+    gestor.agregarEvento(evento1)
+    pantalla = PantallaAdmSismo(gestor)
+    
+    
+    
+    print(f"Evento 1: {evento1.obtener_datos_evento_sismico()}")
 
-    evento5 = EventoSismico(
-        fecha_hora_ocurrencia=datetime(2023, 11, 20, 18, 30, 0),
-        latitud_epicentro=-30.5,
-        longitud_epicentro=-70.8,
-        latitud_hipocentro=-30.6,
-        longitud_hipocentro=-70.9,
-        valor_magnitud=5.7
-    )
-    evento5.crear_cambio_estado("auto_detectado", "evento_sismico")
-    gestor.agregarEvento(evento5)
+    # evento2 = EventoSismico(
+    #     fecha_hora_ocurrencia=datetime(2023, 11, 15, 14, 0, 0),
+    #     latitud_epicentro=-34.5,
+    #     longitud_epicentro=-70.5,
+    #     latitud_hipocentro=-34.6,
+    #     longitud_hipocentro=-70.6,
+    #     valor_magnitud=4.8
+    # )
+    # evento2.crear_cambio_estado("pendiente_revision", "evento_sismico")
+    # gestor.agregarEvento(evento2)
 
-    evento6 = EventoSismico(
-        fecha_hora_ocurrencia=datetime(2023, 10, 30, 8, 45, 0),
-        latitud_epicentro=-32.5,
-        longitud_epicentro=-72.5,
-        latitud_hipocentro=-32.6,
-        longitud_hipocentro=-72.6,
-        valor_magnitud=6.3
-    )
-    evento6.crear_cambio_estado("rechazado", "evento_sismico")
-    gestor.agregarEvento(evento6)
+    # evento3 = EventoSismico(
+    #     fecha_hora_ocurrencia=datetime(2023, 12, 1, 9, 0, 0),
+    #     latitud_epicentro=-32.0,
+    #     longitud_epicentro=-72.0,
+    #     latitud_hipocentro=-32.1,
+    #     longitud_hipocentro=-72.1,
+    #     valor_magnitud=6.1
+    # )
+    # evento3.crear_cambio_estado("bloqueado", "evento_sismico")
+    # gestor.agregarEvento(evento3)
+    
+    # evento4 = EventoSismico(
+    #     fecha_hora_ocurrencia=datetime(2023, 12, 5, 15, 0, 0),
+    #     latitud_epicentro=-31.0,
+    #     longitud_epicentro=-71.5,
+    #     latitud_hipocentro=-31.1,
+    #     longitud_hipocentro=-71.6,
+    #     valor_magnitud=4.2
+    # )
+    # evento4.crear_cambio_estado("pendiente_revision", "evento_sismico")
+    # gestor.agregarEvento(evento4)
 
-    evento7 = EventoSismico(
-        fecha_hora_ocurrencia=datetime(2023, 12, 10, 22, 15, 0),
-        latitud_epicentro=-33.2,
-        longitud_epicentro=-71.2,
-        latitud_hipocentro=-33.3,
-        longitud_hipocentro=-71.3,
-        valor_magnitud=3.9
-    )
-    evento7.crear_cambio_estado("pendiente_revision", "evento_sismico")
-    gestor.agregarEvento(evento7)
+    # evento5 = EventoSismico(
+    #     fecha_hora_ocurrencia=datetime(2023, 11, 20, 18, 30, 0),
+    #     latitud_epicentro=-30.5,
+    #     longitud_epicentro=-70.8,
+    #     latitud_hipocentro=-30.6,
+    #     longitud_hipocentro=-70.9,
+    #     valor_magnitud=5.7
+    # )
+    # evento5.crear_cambio_estado("auto_detectado", "evento_sismico")
+    # gestor.agregarEvento(evento5)
+
+    # evento6 = EventoSismico(
+    #     fecha_hora_ocurrencia=datetime(2023, 10, 30, 8, 45, 0),
+    #     latitud_epicentro=-32.5,
+    #     longitud_epicentro=-72.5,
+    #     latitud_hipocentro=-32.6,
+    #     longitud_hipocentro=-72.6,
+    #     valor_magnitud=6.3
+    # )
+    # evento6.crear_cambio_estado("rechazado", "evento_sismico")
+    # gestor.agregarEvento(evento6)
+
+    # evento7 = EventoSismico(
+    #     fecha_hora_ocurrencia=datetime(2023, 12, 10, 22, 15, 0),
+    #     latitud_epicentro=-33.2,
+    #     longitud_epicentro=-71.2,
+    #     latitud_hipocentro=-33.3,
+    #     longitud_hipocentro=-71.3,
+    #     valor_magnitud=3.9
+    # )
+    # evento7.crear_cambio_estado("pendiente_revision", "evento_sismico")
+    # gestor.agregarEvento(evento7)
 
     serie_valores = [0.1, 0.2, 0.3, 0.2, 0.1]
     serie_temporal1 = SerieTemporal(
@@ -207,4 +220,3 @@ if __name__ == "__main__":
     else:
         print("Saliendo del sistema.")
         exit()
-
