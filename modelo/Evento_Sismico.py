@@ -29,11 +29,7 @@ class EventoSismico:
     def get_longitud_hipocentro(self):
         return self.longitud_hipocentro
 
-    def esActual(self):
-        for ce in self.cambio_estado:
-            if ce.esActual():
-                return ce
-        return None
+
 
     def bloquear(self):
         estado_actual = self.get_estado_actual()
@@ -77,10 +73,9 @@ class EventoSismico:
         return self.obtener_datos_evento()
 
     def buscar_eventos_para_revisar(self):
-        estado_actual = self.esActual()
-        if estado_actual:
-            if estado_actual.es_pte_revision():
-                return True
-            elif estado_actual.es_auto_detectado():
-                return True
+        for ce in self.cambio_estado:
+            if ce.esActual():
+                if ce.es_pte_revision() or ce.es_auto_detectado():
+                    return True
         return False
+    

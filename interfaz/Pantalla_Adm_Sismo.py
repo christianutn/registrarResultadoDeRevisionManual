@@ -34,7 +34,7 @@ class PantallaAdmSismo:
 
     def habilitarVentana(self):
         # Llama al método ordenar_Eventos_Fecha_Hora_Ocurrencia del gestor
-        datos_eventos = self.gestor_sismo.ordenar_Eventos_Fecha_Hora_Ocurrencia()
+        datos_eventos = self.gestor_sismo.ordenar_eventos_fecha_hora_ocurrencia()
         if not datos_eventos:
             sg.popup("No hay eventos pendientes de revisión en este momento.")
             return []
