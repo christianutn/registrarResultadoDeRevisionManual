@@ -59,11 +59,10 @@ class GestorSismo:
                 break
                 
         empleado_logueado = self.buscar_usuario_logueado()
-        print(f"Empleado logueado: {empleado_logueado}")
+        # print(f"Empleado logueado: {empleado_logueado}")
+        evento_seleccionado.bloquear(estado_recuperado, hora_actual, empleado_logueado)
         
- 
-        
-            
+    
         # Aquí continuaremos con la lógica para cambiar el estado usando el estado_recuperado y el empleado_logueado
     
     def buscar_usuario_logueado(self):

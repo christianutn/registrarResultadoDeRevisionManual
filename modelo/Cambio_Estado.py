@@ -2,10 +2,11 @@ from datetime import datetime
 from .Estado import Estado
 
 class CambioEstado:
-    def __init__(self, fecha_hora_inicio: datetime, estado: Estado):
+    def __init__(self, fecha_hora_inicio: datetime, estado: Estado, empleado):
         self.fecha_hora_inicio = fecha_hora_inicio
         self.fecha_hora_fin = None
         self.estado = estado
+        self.empleado = empleado
 
     def esActual(self) -> bool:
         """
@@ -19,19 +20,19 @@ class CambioEstado:
     def es_auto_detectado(self) -> bool:
         return self.estado.es_auto_detectado()
 
-    def setFechaHoraFin(self, fecha_hora: datetime) -> None:
+    def setFechaHoraFin(self, fecha_hora):
         self.fecha_hora_fin = fecha_hora
     
 
-    @classmethod
-    def new(cls, estado: Estado) -> 'CambioEstado':
-        """
-        Crea una nueva instancia con fecha de inicio actual.
-        """
-        return cls(datetime.now(), estado)
+    # @classmethod
+    # def new(cls, estado: Estado) -> 'CambioEstado':
+    #     """
+    #     Crea una nueva instancia con fecha de inicio actual.
+    #     """
+    #     return cls(datetime.now(), estado)
 
-    @classmethod
-    def crear(cls, nombre_estado, ambito):
-        from .Estado import Estado
-        estado = Estado(nombre_estado, ambito)
-        return cls(datetime.now(), estado)
+    # @classmethod
+    # def crear(cls, nombre_estado, ambito):
+    #     from .Estado import Estado
+    #     estado = Estado(nombre_estado, ambito)
+    #     return cls(datetime.now(), estado)

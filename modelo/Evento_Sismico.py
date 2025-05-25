@@ -13,6 +13,7 @@ class EventoSismico:
         self.alcance_sismo = None
         self.series_temporales = []
         self.cambio_estado = []
+        self.estado_actual = None
 
     def get_fecha_hora_ocurrencia(self):
         return self.fecha_hora_ocurrencia
@@ -29,22 +30,17 @@ class EventoSismico:
     def get_longitud_hipocentro(self):
         return self.longitud_hipocentro
 
+    def get_estado_actual(self):   
+        return self.estado_actual
 
-
-    def bloquear(self):
+    def bloquear(self, estado_recuperado, hora_actual, empleado):
         estado_actual = self.get_estado_actual()
-        if estado_actual:
-            estado_actual.set_fecha_hora_fin()
-        self.crear_cambio_estado("Bloqueado")
+        self.crear_cambio_estado(hora_actual, empleado, estado_actual, estado_recuperado)
 
-    def rechazar(self):
-        estado_actual = self.get_estado_actual()
-        if estado_actual:
-            estado_actual.set_fecha_hora_fin()
-        self.crear_cambio_estado("Rechazado")
 
-    def crear_cambio_estado(self, nuevo_estado_nombre, ambito):
-        nuevo_estado = CambioEstado.crear(nuevo_estado_nombre, ambito)
+    def crear_cambio_estado(self, hora_actual, empleado, estado_actual, estado_recuperado):
+        estado_actual.set_fecha_hora_fin(hora_actual)
+        nuevo_estado = CambioEstado(hora_actual, estado_recuperado, empleado)
         self.cambio_estado.append(nuevo_estado)
 
     def obtener_datos_evento_sismico(self):
@@ -75,7 +71,9 @@ class EventoSismico:
     def buscar_eventos_para_revisar(self):
         for ce in self.cambio_estado:
             if ce.esActual():
+                self.estado_actual = ce
                 if ce.es_pte_revision() or ce.es_auto_detectado():
                     return True
         return False
+    
     
