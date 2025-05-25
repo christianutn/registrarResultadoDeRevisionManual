@@ -50,6 +50,7 @@ class GestorSismo:
     def cambiar_estado_evento_sismico(self, evento_seleccionado, accion):
         hora_actual = self.get_fecha_hora_actual()
         estados = Estado.inicializar_estados_mock()
+        print(estados)
         estado_recuperado = None
         
         for estado in estados:

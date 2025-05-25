@@ -23,14 +23,14 @@ class CambioEstado:
         self.fecha_hora_fin = fecha_hora
     
 
-    # @classmethod
+    @classmethod
     def new(cls, estado: Estado) -> 'CambioEstado':
         """
         Crea una nueva instancia con fecha de inicio actual.
         """
         return cls(datetime.now(), estado)
 
-    # @classmethod
+    @classmethod
     def crear(cls, nombre_estado, ambito):
         from .Estado import Estado
         estado = Estado(nombre_estado, ambito)

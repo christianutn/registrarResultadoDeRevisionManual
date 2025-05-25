@@ -43,8 +43,8 @@ class EventoSismico:
             estado_actual.set_fecha_hora_fin()
         self.crear_cambio_estado("Rechazado")
 
-    def crear_cambio_estado(self, nuevo_estado_nombre):
-        nuevo_estado = CambioEstado.crear(nuevo_estado_nombre)
+    def crear_cambio_estado(self, nuevo_estado_nombre, ambito):
+        nuevo_estado = CambioEstado.crear(nuevo_estado_nombre, ambito)
         self.cambio_estado.append(nuevo_estado)
 
     def obtener_datos_evento_sismico(self):

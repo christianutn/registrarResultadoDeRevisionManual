@@ -9,10 +9,27 @@ from modelo.Evento_Sismico import EventoSismico
 from datetime import datetime
 from controlador.Gestor_Sismo import GestorSismo
 import PySimpleGUI as sg
+from modelo.Usuario import Usuario
+from modelo.Empleado import Empleado
+
+# Create a specific employee
+empleado_prueba = Empleado(
+    apellido="Perez",
+    mail="perez@example.com",
+    nombre="Juan",
+    telefono="123456789",
+    rol="Analista"
+)
+
+# Create a specific user and associate it with the employee
+usuario_prueba = Usuario(nombre="jperez", contraseña="1234")
+usuario_prueba.set_empleado(empleado_prueba)
 
 class PantallaAdmSismo:
     def __init__(self, gestor_sismo):
         self.gestor_sismo = gestor_sismo
+        self.usuario_prueba = usuario_prueba
+        self.empleado_prueba = empleado_prueba
 
     def mostrar_menu_opciones(self):
         layout = [
@@ -49,7 +66,7 @@ class PantallaAdmSismo:
         layout = [
             [sg.Text("Seleccione un evento sísmico para revisar:")],
             [sg.Listbox(values=[f"{datos['fecha_hora_ocurrencia']} | Epicentro: ({datos['latitud_epicentro']}, {datos['longitud_epicentro']}) | Hipocentro: ({datos['latitud_hipocentro']}, {datos['longitud_hipocentro']}) | Valor magnitud: ({datos['valor_magnitud']})" for datos in datos_eventos_ordenados], size=(80, 10), key="-LISTA-", enable_events=True)],
-            [sg.Button("Bloquear"), sg.Button("Rechazar"), sg.Button("Salir")]
+            [sg.Button("Bloquear"), sg.Button("Salir")]
         ]
         window = sg.Window("Seleccionar Evento Sísmico", layout)
         evento_seleccionado = None
@@ -59,7 +76,7 @@ class PantallaAdmSismo:
             if event == sg.WINDOW_CLOSED or event == "Salir":
                 accion = "Salir"
                 break
-            if event in ("Bloquear", "Rechazar") and values["-LISTA-"]:
+            if event in ("Bloquear") and values["-LISTA-"]:
                 idx = [f"{datos['fecha_hora_ocurrencia']} | Epicentro: ({datos['latitud_epicentro']}, {datos['longitud_epicentro']}) | Hipocentro: ({datos['latitud_hipocentro']}, {datos['longitud_hipocentro']}) | Valor magnitud: ({datos['valor_magnitud']})" for datos in datos_eventos_ordenados].index(values["-LISTA-"][0])
                 evento_seleccionado = datos_eventos_ordenados[idx]
                 accion = event
