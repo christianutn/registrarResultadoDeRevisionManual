@@ -8,8 +8,7 @@ class GestorSismo:
     def buscar_eventos_para_revisar(self):
         eventos_para_revisar = []
         for evento in self.eventos_sismicos:
-            estado_actual = evento.esActual()
-            if estado_actual and (estado_actual.es_pte_revision() or estado_actual.es_auto_detectado()):
+            if evento.buscar_eventos_para_revisar():
                 eventos_para_revisar.append(evento)
         return eventos_para_revisar
 
