@@ -32,38 +32,39 @@ class PantallaAdmSismo:
         window.close()
         return opcion
 
-    def habilitarVentana(self):
-        # Llama al método ordenar_Eventos_Fecha_Hora_Ocurrencia del gestor
-        datos_eventos = self.gestor_sismo.ordenar_eventos_fecha_hora_ocurrencia()
-        if not datos_eventos:
-            sg.popup("No hay eventos pendientes de revisión en este momento.")
-            return []
-        layout = [
-            [sg.Text("Eventos Sísmicos Pendientes de Revisión")],
-            [sg.Listbox(values=[f"{datos['fecha_hora_ocurrencia']} | Epicentro: ({datos['latitud_epicentro']}, {datos['longitud_epicentro']}) | Hipocentro: ({datos['latitud_hipocentro']}, {datos['longitud_hipocentro']}) | Valor magnitud: ({datos['valor_magnitud']})" for datos in datos_eventos], size=(80, 10), key="-LISTA-", enable_events=True)],
-            [sg.Button("Bloquear"), sg.Button("Rechazar"), sg.Button("Salir")]
-        ]
-        window = sg.Window("Eventos para Revisar", layout)
-        while True:
-            event, values = window.read()
-            if event == sg.WINDOW_CLOSED or event == "Salir":
-                break
-            if event == "Bloquear" and values["-LISTA-"]:
-                idx = [f"{i+1}." for i in range(len(datos_eventos))].index(values["-LISTA-"][0].split()[0])
-                self.bloquear_evento(datos_eventos[idx])
-                sg.popup("Evento bloqueado")
-            if event == "Rechazar" and values["-LISTA-"]:
-                idx = [f"{i+1}." for i in range(len(datos_eventos))].index(values["-LISTA-"][0].split()[0])
-                self.rechazar_evento(datos_eventos[idx])
-                sg.popup("Evento rechazado")
-        window.close()
-        return datos_eventos
+    def habilitarVentana(self):        # Llama al método registrarResRevManual del gestor
+        self.gestor_sismo.registrarResRevManual()
 
     def bloquear_evento(self, evento):
         self.gestor_sismo.bloquear_evento(evento)
 
     def rechazar_evento(self, evento):
         self.gestor_sismo.rechazar_evento(evento)
+
+    def solicitar_elecc_evento_sismico(self, datos_eventos_ordenados):
+        if not datos_eventos_ordenados:
+            sg.popup("No hay eventos pendientes de revisión en este momento.")
+            return None, None
+        layout = [
+            [sg.Text("Seleccione un evento sísmico para revisar:")],
+            [sg.Listbox(values=[f"{datos['fecha_hora_ocurrencia']} | Epicentro: ({datos['latitud_epicentro']}, {datos['longitud_epicentro']}) | Hipocentro: ({datos['latitud_hipocentro']}, {datos['longitud_hipocentro']}) | Valor magnitud: ({datos['valor_magnitud']})" for datos in datos_eventos_ordenados], size=(80, 10), key="-LISTA-", enable_events=True)],
+            [sg.Button("Bloquear"), sg.Button("Rechazar"), sg.Button("Salir")]
+        ]
+        window = sg.Window("Seleccionar Evento Sísmico", layout)
+        evento_seleccionado = None
+        accion = None
+        while True:
+            event, values = window.read()
+            if event == sg.WINDOW_CLOSED or event == "Salir":
+                accion = "Salir"
+                break
+            if event in ("Bloquear", "Rechazar") and values["-LISTA-"]:
+                idx = [f"{datos['fecha_hora_ocurrencia']} | Epicentro: ({datos['latitud_epicentro']}, {datos['longitud_epicentro']}) | Hipocentro: ({datos['latitud_hipocentro']}, {datos['longitud_hipocentro']}) | Valor magnitud: ({datos['valor_magnitud']})" for datos in datos_eventos_ordenados].index(values["-LISTA-"][0])
+                evento_seleccionado = datos_eventos_ordenados[idx]
+                accion = event
+                break
+        window.close()
+        return evento_seleccionado, accion
 
 
 if __name__ == "__main__":
