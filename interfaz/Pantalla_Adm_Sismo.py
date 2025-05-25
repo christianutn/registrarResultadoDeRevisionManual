@@ -11,6 +11,7 @@ from controlador.Gestor_Sismo import GestorSismo
 import PySimpleGUI as sg
 from modelo.Usuario import Usuario
 from modelo.Empleado import Empleado
+from modelo.Sesion import Sesion
 
 # Create a specific employee
 empleado_prueba = Empleado(
@@ -22,14 +23,16 @@ empleado_prueba = Empleado(
 )
 
 # Create a specific user and associate it with the employee
-usuario_prueba = Usuario(nombre="jperez", contraseña="1234")
+usuario_prueba = Usuario(nombre="jperez", contraseña="1234", empleado=empleado_prueba)
 usuario_prueba.set_empleado(empleado_prueba)
+
+# Create a session and associate it with the user
+sesion_prueba = Sesion(fecha_hora_inicio=datetime.now(), fecha_hora_fin=None, usuario=usuario_prueba)
 
 class PantallaAdmSismo:
     def __init__(self, gestor_sismo):
         self.gestor_sismo = gestor_sismo
-        self.usuario_prueba = usuario_prueba
-        self.empleado_prueba = empleado_prueba
+        self.sesion_prueba = sesion_prueba
 
     def mostrar_menu_opciones(self):
         layout = [
@@ -106,7 +109,7 @@ if __name__ == "__main__":
         nro_certificacion_adquisicion="CERT1234"
     )
 
-    gestor = GestorSismo()
+    gestor = GestorSismo(sesion_prueba)
     pantalla = PantallaAdmSismo(gestor)
 
     evento1 = EventoSismico(
