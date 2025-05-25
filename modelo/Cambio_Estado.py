@@ -20,7 +20,7 @@ class CambioEstado:
     def es_auto_detectado(self) -> bool:
         return self.estado.es_auto_detectado()
 
-    def setFechaHoraFin(self, fecha_hora):
+    def set_fecha_hora_fin(self, fecha_hora):
         self.fecha_hora_fin = fecha_hora
     
 

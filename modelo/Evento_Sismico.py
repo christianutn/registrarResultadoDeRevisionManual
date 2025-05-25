@@ -41,7 +41,7 @@ class EventoSismico:
     def crear_cambio_estado(self, hora_actual, empleado, estado_actual, estado_recuperado):
         # Si hay un estado actual, se le setea la fecha de fin
         if estado_actual is not None:
-            estado_actual.set_fecha_hora_fin(hora_actual)
+            self.estado_actual.set_fecha_hora_fin(hora_actual)
         # Crear el nuevo cambio de estado con la hora actual, el estado (puntero) y el empleado
         nuevo_cambio_estado = CambioEstado(hora_actual, estado_recuperado, empleado)
         self.cambio_estado.append(nuevo_cambio_estado)

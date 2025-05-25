@@ -23,7 +23,7 @@ class GestorSismo:
         eventos_para_revisar = self.buscar_eventos_para_revisar()
         datos_eventos_para_revisar = self.buscar_datos_eventos_para_revisar(eventos_para_revisar)
         datos_eventos_ordenados = self.ordenar_eventos_fecha_hora_ocurrencia(datos_eventos_para_revisar)
-        return datos_eventos_ordenados
+        return datos_eventos_ordenados, eventos_para_revisar
         
     
     def buscar_datos_eventos_para_revisar(self, eventos_para_revisar): # GESTOR DEBE TENER ESTE MÉTODO 

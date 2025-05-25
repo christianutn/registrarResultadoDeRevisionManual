@@ -52,10 +52,10 @@ class PantallaAdmSismo:
         window.close()
         return opcion
 
-    def habilitarVentana(self):        # Llama al método registrarResRevManual del gestor
-        datos_eventos_ordenados = self.gestor_sismo.registrarResRevManual()
-        
-        self.solicitar_elecc_evento_sismico(datos_eventos_ordenados)
+    def habilitarVentana(self):
+        # Recibe dos valores: la lista de dicts y la lista de objetos
+        datos_eventos_ordenados, eventos_objetos = self.gestor_sismo.registrarResRevManual()
+        self.solicitar_elecc_evento_sismico(datos_eventos_ordenados, eventos_objetos)
 
     def bloquear_evento(self, evento):
         self.gestor_sismo.bloquear_evento(evento)
@@ -63,7 +63,7 @@ class PantallaAdmSismo:
     def rechazar_evento(self, evento):
         self.gestor_sismo.rechazar_evento(evento)
 
-    def solicitar_elecc_evento_sismico(self, datos_eventos_ordenados):
+    def solicitar_elecc_evento_sismico(self, datos_eventos_ordenados, eventos_objetos):
         if not datos_eventos_ordenados:
             sg.popup("No hay eventos pendientes de revisión en este momento.")
             return None, None
@@ -82,13 +82,16 @@ class PantallaAdmSismo:
                 break
             if event in ("Bloquear") and values["-LISTA-"]:
                 idx = [f"{datos['fecha_hora_ocurrencia']} | Epicentro: ({datos['latitud_epicentro']}, {datos['longitud_epicentro']}) | Hipocentro: ({datos['latitud_hipocentro']}, {datos['longitud_hipocentro']}) | Valor magnitud: ({datos['valor_magnitud']})" for datos in datos_eventos_ordenados].index(values["-LISTA-"][0])
-                evento_seleccionado = datos_eventos_ordenados[idx]
+                evento_seleccionado = eventos_objetos[idx]  # Aquí obtienes el puntero al objeto real
                 accion = event
                 break
         window.close()
         self.tomar_elecc_evento_sismico(evento_seleccionado, accion)      
     
     def tomar_elecc_evento_sismico(self, evento_seleccionado, accion):
+        if evento_seleccionado is None:
+            sg.popup("Hasta luego")
+            return
         self.gestor_sismo.tomar_elecc_evento_sismico(evento_seleccionado, accion)
         
 
