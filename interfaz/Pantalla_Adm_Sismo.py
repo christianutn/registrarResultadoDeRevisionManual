@@ -1,3 +1,8 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+
 from modelo.Estado import Estado
 from modelo.Estado import inicializar_estados_mock
 from modelo.Alcance_Sismo import AlcanceSismo
@@ -57,11 +62,6 @@ class PantallaAdmSismo:
         datos_eventos_ordenados, eventos_objetos = self.gestor_sismo.registrarResRevManual()
         self.solicitar_elecc_evento_sismico(datos_eventos_ordenados, eventos_objetos)
 
-    def bloquear_evento(self, evento):
-        self.gestor_sismo.bloquear_evento(evento)
-
-    def rechazar_evento(self, evento):
-        self.gestor_sismo.rechazar_evento(evento)
 
     def solicitar_elecc_evento_sismico(self, datos_eventos_ordenados, eventos_objetos):
         if not datos_eventos_ordenados:
@@ -93,6 +93,7 @@ class PantallaAdmSismo:
             sg.popup("Hasta luego")
             return
         self.gestor_sismo.tomar_elecc_evento_sismico(evento_seleccionado, accion)
+        
         
 
 

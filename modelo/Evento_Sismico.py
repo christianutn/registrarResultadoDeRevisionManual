@@ -41,11 +41,12 @@ class EventoSismico:
     def crear_cambio_estado(self, hora_actual, empleado, estado_actual, estado_recuperado):
         # Si hay un estado actual, se le setea la fecha de fin
         if estado_actual is not None:
-            self.estado_actual.set_fecha_hora_fin(hora_actual)
+            estado_actual.set_fecha_hora_fin(hora_actual)
         # Crear el nuevo cambio de estado con la hora actual, el estado (puntero) y el empleado
         nuevo_cambio_estado = CambioEstado(hora_actual, estado_recuperado, empleado)
         self.cambio_estado.append(nuevo_cambio_estado)
         self.estado_actual = nuevo_cambio_estado
+        print(nuevo_cambio_estado)
 
     def obtener_datos_evento_sismico(self):
         return {
@@ -55,9 +56,14 @@ class EventoSismico:
             "latitud_hipocentro": self.latitud_hipocentro,
             "longitud_hipocentro": self.longitud_hipocentro,
             "valor_magnitud": self.valor_magnitud
-            # "alcance_sismo": self.alcance_sismo.get_descripcion() if self.alcance_sismo else None,
-            # "origen_generacion": self.origen_de_generacion.get_nombre() if self.origen_de_generacion else None,
-            # "estado_actual": self.esActual().estado.nombre_estado if self.esActual() else "N/A"
+            
+        }
+        
+    def obtener_datos_evento(self):
+        return {
+            "alcance_sismo": self.alcance_sismo.get_nombre() if self.alcance_sismo else None,
+            "origen_generacion": self.origen_de_generacion.get_nombre() if self.origen_de_generacion else None,
+            "clasificacion_sismo": self.clasificacion_sismo.get_nombre() if self.clasificacion_sismo else None,     
         }
 
     def obtener_series_temporales(self):

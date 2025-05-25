@@ -6,17 +6,10 @@ class GestorSismo:
     def __init__(self, sesion):
         self.eventos_sismicos = []
         self.sesion = sesion
+        self.evento_seleccionado = None
 
     def agregarEvento(self, evento):
         self.eventos_sismicos.append(evento)
-
-    def bloquear_evento(self, evento):
-        evento.bloquear()
-        print(f"Evento {evento.getFechaHoraOcurrencia()} bloqueado.")
-
-    def rechazar_evento(self, evento):
-        evento.rechazar()
-        print(f"Evento {evento.getFechaHoraOcurrencia()} rechazado.")
     
     def registrarResRevManual(self):
         # Llama al método que busca los datos de los eventos para revisar ordenados
@@ -47,6 +40,7 @@ class GestorSismo:
     
     def tomar_elecc_evento_sismico(self, evento_seleccionado, accion):
         self.cambiar_estado_evento_sismico(evento_seleccionado, accion)
+        self.evento_seleccionado = evento_seleccionado
         
     def cambiar_estado_evento_sismico(self, evento_seleccionado, accion):
         hora_actual = self.get_fecha_hora_actual()
@@ -62,7 +56,7 @@ class GestorSismo:
         # print(f"Empleado logueado: {empleado_logueado}")
         evento_seleccionado.bloquear(estado_recuperado, hora_actual, empleado_logueado)
         
-    
+        
         # Aquí continuaremos con la lógica para cambiar el estado usando el estado_recuperado y el empleado_logueado
     
     def buscar_usuario_logueado(self):
@@ -73,3 +67,6 @@ class GestorSismo:
         
     def get_fecha_hora_actual(self):
         return datetime.now()
+    
+    def buscar_datos_evento(self):
+        datos_eventos = self.evento_seleccionado.obtener_datos_evento() 
