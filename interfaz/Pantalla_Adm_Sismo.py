@@ -33,7 +33,8 @@ class PantallaAdmSismo:
         return opcion
 
     def habilitarVentana(self):        # Llama al método registrarResRevManual del gestor
-        self.gestor_sismo.registrarResRevManual()
+        datos_eventos_ordenados = self.gestor_sismo.registrarResRevManual()
+        self.solicitar_elecc_evento_sismico(datos_eventos_ordenados)
 
     def bloquear_evento(self, evento):
         self.gestor_sismo.bloquear_evento(evento)

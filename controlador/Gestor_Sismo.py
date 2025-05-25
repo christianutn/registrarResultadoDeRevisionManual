@@ -1,9 +1,6 @@
-from interfaz.Pantalla_Adm_Sismo import PantallaAdmSismo
-
 class GestorSismo:
-    def __init__(self, pantalla_adm_sismo):
+    def __init__(self):
         self.eventos_sismicos = []
-        self.pantalla = pantalla_adm_sismo
 
     def agregarEvento(self, evento):
         self.eventos_sismicos.append(evento)
@@ -21,7 +18,7 @@ class GestorSismo:
         eventos_para_revisar = self.buscar_eventos_para_revisar()
         datos_eventos_para_revisar = self.buscar_datos_eventos_para_revisar(eventos_para_revisar)
         datos_eventos_ordenados = self.ordenar_eventos_fecha_hora_ocurrencia(datos_eventos_para_revisar)
-        self.pantalla.solicitar_elecc_evento_sismico(datos_eventos_ordenados)
+        return datos_eventos_ordenados
         
     
     def buscar_datos_eventos_para_revisar(self, eventos_para_revisar): # GESTOR DEBE TENER ESTE MÉTODO 
