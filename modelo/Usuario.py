@@ -1,3 +1,5 @@
+from modelo.Empleado import Empleado
+
 class Usuario:
     def __init__(self, nombre, contraseña):
         self.nombre = nombre
@@ -7,3 +9,6 @@ class Usuario:
         
     def set_empleado(self, empleado):
         self.empleado = empleado
+        
+    def get_nombre(self):
+        return Empleado.get_empleado(self.empleado)

@@ -16,6 +16,9 @@ class Estado:
     
     def esAmbitoEventoSismico(self):
         return self.ambito == "evento_sismico"
+    
+    def esBloqueado(self):
+        return self.nombre_estado == "bloqueado"
 
 # Función fuera de la clase para inicializar estados mock
 

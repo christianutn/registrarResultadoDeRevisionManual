@@ -1,9 +1,10 @@
 from datetime import datetime
-
+from modelo.Estado import Estado
 
 class GestorSismo:
     def __init__(self):
         self.eventos_sismicos = []
+        self.sesion = None
 
     def agregarEvento(self, evento):
         self.eventos_sismicos.append(evento)
@@ -48,6 +49,32 @@ class GestorSismo:
         
     def cambiar_estado_evento_sismico(self, evento_seleccionado, accion):
         hora_actual = self.get_fecha_hora_actual()
+        estados = Estado.inicializar_estados_mock()
+        estado_recuperado = None
+        
+        for estado in estados:
+            if estado.esBloqueado() and estado.esAmbitoEventoSismico():
+                estado_recuperado = estado
+                break
+                
+        usuario_logueado = self.buscar_usuario_logueado()
+        if usuario_logueado is None:
+            print("No hay usuario logueado para registrar el cambio de estado")
+            return None
+            
+        empleado_logueado = usuario_logueado.empleado
+        if empleado_logueado is None:
+            print("El usuario no tiene un empleado asociado")
+            return None
+            
+        # Aquí continuaremos con la lógica para cambiar el estado usando el estado_recuperado y el empleado_logueado
+    
+    def buscar_usuario_logueado(self):
+        if self.sesion:
+            return self.sesion.get_usuario_logueado()
+        return None
+        
+        
         
     def get_fecha_hora_actual(self):
         return datetime.now()
