@@ -7,9 +7,15 @@ class SerieTemporal:
         self.muestras_sismicas = [] 
         self.sismografo = None
         
-        def agregar_muestra_sismica(self, muestra_sismica):
-            self.muestras_sismicas.append(muestra_sismica)
+    def agregar_muestra_sismica(self, muestra_sismica):
+        self.muestras_sismicas.append(muestra_sismica)
         
-        def set_sismografo(self, sismografo):
-            self.sismografo = sismografo
+    def set_sismografo(self, sismografo):
+        self.sismografo = sismografo
         
+    def get_datos(self):
+        datos_muestras = []
+        for i in range(len(self.muestras_sismicas)):
+            datos_muestras.append(self.muestras_sismicas[i].get_datos(self))
+        return datos_muestras
+            

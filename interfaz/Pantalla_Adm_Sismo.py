@@ -81,4 +81,5 @@ class PantallaAdmSismo:
             return
         self.gestor_sismo.tomar_elecc_evento_sismico(evento_seleccionado, accion)
         print("Evento bloqueado exitosamente")
+        self.gestor_sismo.buscar_datos_series_temporales(evento_seleccionado)
     

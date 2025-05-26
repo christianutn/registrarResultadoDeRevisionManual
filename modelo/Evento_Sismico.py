@@ -69,11 +69,7 @@ class EventoSismico:
             "clasificacion_sismo": self.clasificacion_sismo.get_nombre() if self.clasificacion_sismo else None,     
         }
 
-    def obtener_series_temporales(self):
-        return self.series_temporales
 
-    def agregar_serie_temporal(self, serie):
-        self.series_temporales.append(serie)
 
     def agregar_cambio_estado(self, cambio):
         self.cambios_estado.append(cambio)
@@ -107,4 +103,12 @@ class EventoSismico:
     def set_alcance_sismo(self, alcance):
         self.validar_y_asignar_alcance(alcance)
 
+    def obtener_series_temporales(self):
+        datos_series = []
+        for i in range(len(self.series_temporales)):
+            datos_series.append(self.series_temporales[i].get_datos())
+        
+        
+    def agregar_serie_temporal(self, serie):
+        self.series_temporales.append(serie)
 

@@ -18,6 +18,14 @@ from modelo.Cambio_Estado import CambioEstado
 def cargar_eventos_desde_csv(ruta_csv):
     eventos = []
     estados_disponibles = inicializar_estados_mock()
+    from modelo.Serie_Temporal import SerieTemporal
+    from modelo.Muestra_Sismica import MuestraSismica
+    from modelo.Detalle_Muestra_Sismica import DetalleMuestraSismica
+    from modelo.Tipo_De_Dato import TipoDeDato
+    from datetime import timedelta
+
+    denominaciones = ["Velocidad de onda", "Frecuencia de onda", "Longitud"]
+    unidades = ["km/seg", "Hz", "km/ciclo"]
 
     with open(ruta_csv, mode='r', encoding='utf-8') as archivo:
         lector = csv.DictReader(archivo)
@@ -29,25 +37,48 @@ def cargar_eventos_desde_csv(ruta_csv):
                 latitud_hipocentro=float(fila['latitud_hipocentro']),
                 longitud_hipocentro=float(fila['longitud_hipocentro']),
                 valor_magnitud=float(fila['valor_magnitud']),
-                cambio_estado=[]  # Los cambios de estado pueden ser cargados aparte si es necesario
+                cambio_estado=[]
             )
-            # Validar y asignar clasificaciones, orígenes y alcances
             evento.validar_y_asignar_clasificacion(fila['clasificacion_sismo'])
             evento.validar_y_asignar_origen(fila['origen_de_generacion'])
             evento.validar_y_asignar_alcance(fila['alcance_sismo'])
 
-            # Asignar un estado inicial aleatorio de los disponibles
             estado_inicial = random.choice(estados_disponibles)
-
-            # Registrar el cambio de estado inicial
             if estado_inicial:
                 cambio_estado_inicial = CambioEstado(
                     fecha_hora_inicio=datetime.now(),
                     estado=estado_inicial,
-                    empleado=None  # No hay empleado asociado al estado inicial
+                    empleado=None
                 )
                 evento.cambio_estado.append(cambio_estado_inicial)
                 evento.estado_actual = cambio_estado_inicial
+
+            # Agregar series temporales mock
+            for i in range(1, random.randint(2, 4)):
+                serie = SerieTemporal(
+                    condicion_alarma=f"Alarma {i}",
+                    fecha_hora_inicio_registro_muestras=evento.fecha_hora_ocurrencia,
+                    fecha_hora_registro=evento.fecha_hora_ocurrencia + timedelta(minutes=i*5),
+                    frecuencia_muestreo=100 + i*10
+                )
+                # Agregar muestras sísmicas mock (1..*)
+                for j in range(1, random.randint(2, 4)):
+                    muestra = MuestraSismica(
+                        fecha_hora_muestra=evento.fecha_hora_ocurrencia + timedelta(minutes=i*5 + j)
+                    )
+                    # Cada muestra tiene exactamente 3 detalles: velocidad, frecuencia y longitud
+                    for idx in range(3):
+                        valor = round(random.uniform(0.1, 10.0), 2)
+                        detalle = DetalleMuestraSismica(valor=valor)
+                        tipo_dato = TipoDeDato(
+                            denominacion=denominaciones[idx],
+                            nombre_unidad_medida=unidades[idx],
+                            valor_umbral=round(random.uniform(1.0, 5.0), 2)
+                        )
+                        detalle.set_tipo_de_dato(tipo_dato)
+                        muestra.agregar_detalle_muestra(detalle)
+                    serie.agregar_muestra_sismica(muestra)
+                evento.agregar_serie_temporal(serie)
 
             eventos.append(evento)
     return eventos

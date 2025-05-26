@@ -75,3 +75,7 @@ class GestorSismo:
     def buscar_datos_evento(self):
         datos_eventos = self.evento_seleccionado.obtener_datos_evento() 
         return datos_eventos
+    
+    def buscar_datos_series_temporales(self):
+        datos_series_temporales = self.evento_seleccionado.obtener_series_temporales()
+        return datos_series_temporales
