@@ -10,8 +10,8 @@ from modelo.Estacion_Sismologica import EstacionSismologica
 from modelo.Serie_Temporal import SerieTemporal
 from modelo.Cambio_Estado import CambioEstado
 from modelo.Evento_Sismico import EventoSismico
-from datetime import datetime
 from controlador.Gestor_Sismo import GestorSismo
+from datetime import datetime
 import PySimpleGUI as sg
 from modelo.Usuario import Usuario
 from modelo.Empleado import Empleado
@@ -78,3 +78,6 @@ class PantallaAdmSismo:
             return
         self.gestor_sismo.tomar_elecc_evento_sismico(evento_seleccionado, accion)
         print("Evento bloqueado exitosamente")
+    
+    def opcRegResManual(self):
+        self.habilitarVentana()
