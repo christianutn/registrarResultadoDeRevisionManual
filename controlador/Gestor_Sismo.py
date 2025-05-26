@@ -76,7 +76,12 @@ class GestorSismo:
         datos_series_temporales_clasificados = self.clasificar_por_estacion(datos_series_temporales)
         return datos_series_temporales_clasificados
     
-    def clasificar_por_estacion(self, datos_series_temporales_clasificados):
-        pass
-        
-        
+    def clasificar_por_estacion(self, datos_series_temporales):
+        series_por_estacion = {}
+        for serie in datos_series_temporales:
+            nombre_estacion = serie[2] if len(serie) > 2 else 'SIN_NOMBRE'
+            if nombre_estacion not in series_por_estacion:
+                series_por_estacion[nombre_estacion] = []
+            series_por_estacion[nombre_estacion].append(serie)
+        return series_por_estacion
+

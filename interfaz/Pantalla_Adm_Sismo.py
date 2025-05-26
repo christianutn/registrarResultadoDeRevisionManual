@@ -81,5 +81,59 @@ class PantallaAdmSismo:
             return
         self.gestor_sismo.tomar_elecc_evento_sismico(evento_seleccionado, accion)
         print("Evento bloqueado exitosamente")
+        self.mostrar_datos_evento_selecc()
+
+    def mostrar_datos_evento_selecc(self):
         datos_series = self.gestor_sismo.buscar_datos_series_temporales()
         print("Datos de series temporales obtenidos exitosamente")
+        if isinstance(datos_series, dict):
+            texto = ""
+            for estacion, series in datos_series.items():
+                texto += f"\n{estacion}\n"
+                for serie in series:
+                    texto += f"  Serie: {serie}\n"
+        else:
+            texto = str(datos_series)
+        # Nueva ventana con botones
+        layout = [
+            [sg.Multiline(texto, size=(80, 20), disabled=True)],
+            [sg.Button("Ver mapa"), sg.Button("Modificar evento"), sg.Button("Siguiente")]
+        ]
+        window = sg.Window("Series temporales por estación", layout)
+        while True:
+            event, _ = window.read()
+            if event == sg.WINDOW_CLOSED or event == "Siguiente":
+                break
+            if event == "Ver mapa":
+                self.habilitar_opc_mapa()
+            if event == "Modificar evento":
+                self.habilitar_opc_modificar_evento()
+        window.close()
+        self.mostrar_opciones_accion_evento()
+
+    def mostrar_opciones_accion_evento(self):
+        layout = [
+            [sg.Text("Seleccione una acción para el evento sísmico:")],
+            [sg.Button("Confirmar evento"), sg.Button("Rechazar evento"), sg.Button("Solicitar revisión a experto"), sg.Button("Cancelar")]
+        ]
+        window = sg.Window("Acción sobre evento sísmico", layout)
+        while True:
+            event, _ = window.read()
+            if event in (sg.WINDOW_CLOSED, "Cancelar"):
+                break
+            if event == "Confirmar evento":
+                sg.popup("Evento confirmado. (Acá se actualizaría el estado y se registraría la fecha y usuario responsable)")
+                break
+            if event == "Rechazar evento":
+                sg.popup("Evento rechazado. (Acá se actualizaría el estado y se registraría la fecha y usuario responsable)")
+                break
+            if event == "Solicitar revisión a experto":
+                sg.popup("Revisión a experto solicitada. (Acá se actualizaría el estado y se registraría la fecha y usuario responsable)")
+                break
+        window.close()
+        
+    def habilitar_opc_mapa(self):
+        sg.popup("Opción de mapa habilitada para el evento seleccionado. Acá se mostraría el mapa con la ubicación del evento y estaciones asociadas")
+
+    def habilitar_opc_modificar_evento(self):
+        sg.popup("Opción para modificar los datos del evento sísmico habilitada. Acá se permitiría editar los datos del evento seleccionado.")
