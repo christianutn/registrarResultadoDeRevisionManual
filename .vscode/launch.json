@@ -2,10 +2,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python Debugger: Pantalla_Adm_Sismo",
+            "name": "Python Debugger: Main",
             "type": "debugpy",
             "request": "launch",
-            "module": "interfaz.Pantalla_Adm_Sismo",
+            "program": "${workspaceFolder}/interfaz/main.py",
             "console": "integratedTerminal"
         }
     ]

@@ -49,7 +49,7 @@ class EventoSismico:
         nuevo_cambio_estado = CambioEstado(hora_actual, estado_recuperado, empleado)
         self.cambio_estado.append(nuevo_cambio_estado)
         self.estado_actual = nuevo_cambio_estado
-        print(nuevo_cambio_estado)
+
 
     def obtener_datos_evento_sismico(self):
         return {
@@ -90,15 +90,21 @@ class EventoSismico:
         return False
 
     def validar_y_asignar_clasificacion(self, clasificacion):
-        # Validate and assign classification
         self.clasificacion_sismo = next((c for c in inicializar_clasificaciones_mock() if c.get_nombre() == clasificacion), None)
 
     def validar_y_asignar_origen(self, origen):
-        # Validate and assign origin
         self.origen_de_generacion = next((o for o in inicializar_origenes_mock() if o.get_nombre() == origen), None)
 
     def validar_y_asignar_alcance(self, alcance):
-        # Validate and assign scope
         self.alcance_sismo = next((a for a in inicializar_alcances_mock() if a.get_nombre() == alcance), None)
+
+    def set_clasificacion_sismo(self, clasificacion):
+        self.validar_y_asignar_clasificacion(clasificacion)
+
+    def set_origen_de_generacion(self, origen):
+        self.validar_y_asignar_origen(origen)
+
+    def set_alcance_sismo(self, alcance):
+        self.validar_y_asignar_alcance(alcance)
 
 

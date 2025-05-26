@@ -56,7 +56,8 @@ class GestorSismo:
         # print(f"Empleado logueado: {empleado_logueado}")
         evento_seleccionado.bloquear(estado_recuperado, hora_actual, empleado_logueado)
         self.evento_seleccionado = evento_seleccionado
-        datos_evento = self.buscar_datos_evento()
+        
+        datos_evento = self.buscar_datos_evento() # ELIMINAR LUEGO
         
         
         
