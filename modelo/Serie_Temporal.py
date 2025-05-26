@@ -16,6 +16,10 @@ class SerieTemporal:
     def get_datos(self):
         datos_muestras = []
         for i in range(len(self.muestras_sismicas)):
-            datos_muestras.append(self.muestras_sismicas[i].get_datos(self))
-        return datos_muestras
-            
+            datos_muestras.append(self.muestras_sismicas[i].get_datos())
+        estacion_codigo, estacion_nombre = self.sismografo.get_datos_estacion()
+        return datos_muestras, estacion_codigo, estacion_nombre
+    
+    
+        
+       

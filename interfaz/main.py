@@ -22,6 +22,8 @@ def cargar_eventos_desde_csv(ruta_csv):
     from modelo.Muestra_Sismica import MuestraSismica
     from modelo.Detalle_Muestra_Sismica import DetalleMuestraSismica
     from modelo.Tipo_De_Dato import TipoDeDato
+    from modelo.Estacion_Sismologica import EstacionSismologica
+    from modelo.Sismografo import Sismografo
     from datetime import timedelta
 
     denominaciones = ["Velocidad de onda", "Frecuencia de onda", "Longitud"]
@@ -53,14 +55,35 @@ def cargar_eventos_desde_csv(ruta_csv):
                 evento.cambio_estado.append(cambio_estado_inicial)
                 evento.estado_actual = cambio_estado_inicial
 
-            # Agregar series temporales mock
+            # Agregar series temporales mock, cada una con su propia estación y sismógrafo
             for i in range(1, random.randint(2, 4)):
+                # Crear una estación sismológica para la serie temporal
+                estacion = EstacionSismologica(
+                    codigo_estacion=f"EST-{random.randint(100,999)}",
+                    documento_certificacion_adq=f"DOC-{random.randint(1000,9999)}",
+                    fecha_solicitud_certificacion=datetime.now().date(),
+                    latitud=evento.latitud_epicentro,
+                    longitud=evento.longitud_epicentro,
+                    nombre=f"Estacion-{random.randint(1,10)}",
+                    nro_certificacion_adquisicion=f"CERT-{random.randint(1000,9999)}"
+                )
+                # Crear un sismógrafo asociado a la estación
+                sismografo = Sismografo(
+                    fecha_adquisicion=datetime.now().date(),
+                    identificador_sismografo=f"SIS-{random.randint(1000,9999)}",
+                    nro_serie=f"SN-{random.randint(10000,99999)}"
+                )
+                sismografo.estacion_sismologica = estacion
+
                 serie = SerieTemporal(
                     condicion_alarma=f"Alarma {i}",
                     fecha_hora_inicio_registro_muestras=evento.fecha_hora_ocurrencia,
                     fecha_hora_registro=evento.fecha_hora_ocurrencia + timedelta(minutes=i*5),
                     frecuencia_muestreo=100 + i*10
                 )
+                # Asociar sismógrafo a la serie temporal
+                serie.set_sismografo(sismografo)
+                sismografo.series_temporales.append(serie)
                 # Agregar muestras sísmicas mock (1..*)
                 for j in range(1, random.randint(2, 4)):
                     muestra = MuestraSismica(

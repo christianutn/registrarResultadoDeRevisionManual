@@ -7,3 +7,9 @@ class EstacionSismologica:
         self.longitud = longitud
         self.nombre = nombre
         self.nro_certificacion_adquisicion = nro_certificacion_adquisicion
+
+    def get_codigo_estacion(self):
+        return self.codigo_estacion
+    
+    def get_nombre(self):  
+        return self.nombre

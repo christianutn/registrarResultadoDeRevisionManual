@@ -107,6 +107,7 @@ class EventoSismico:
         datos_series = []
         for i in range(len(self.series_temporales)):
             datos_series.append(self.series_temporales[i].get_datos())
+        return datos_series
         
         
     def agregar_serie_temporal(self, serie):

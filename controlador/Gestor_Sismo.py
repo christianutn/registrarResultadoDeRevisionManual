@@ -57,11 +57,6 @@ class GestorSismo:
         evento_seleccionado.bloquear(estado_recuperado, hora_actual, empleado_logueado)
         self.evento_seleccionado = evento_seleccionado
         
-        datos_evento = self.buscar_datos_evento() # ELIMINAR LUEGO
-        
-        
-        
-        # Aquí continuaremos con la lógica para cambiar el estado usando el estado_recuperado y el empleado_logueado
     
     def buscar_usuario_logueado(self):
         if self.sesion:
@@ -78,4 +73,10 @@ class GestorSismo:
     
     def buscar_datos_series_temporales(self):
         datos_series_temporales = self.evento_seleccionado.obtener_series_temporales()
-        return datos_series_temporales
+        datos_series_temporales_clasificados = self.clasificar_por_estacion(datos_series_temporales)
+        return datos_series_temporales_clasificados
+    
+    def clasificar_por_estacion(self, datos_series_temporales_clasificados):
+        pass
+        
+        
