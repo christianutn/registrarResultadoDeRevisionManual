@@ -79,12 +79,12 @@ if __name__ == "__main__":
     for evento in eventos_cargados:
         gestor.agregarEvento(evento)
 
-    pantalla = PantallaAdmSismo(gestor) # VEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEER
-
+    pantalla = PantallaAdmSismo(gestor) 
+    
     # Mostrar menú principal antes de habilitar ventana
     opcion = mostrar_menu_opciones()
     if opcion == "Registrar resultado de revisión manual":
-        pantalla.opcRegResManual()
+        pantalla.opc_res_rev_manual()
     else:
         print("Saliendo del sistema.")
         exit()

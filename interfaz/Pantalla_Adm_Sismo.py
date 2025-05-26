@@ -40,6 +40,9 @@ class PantallaAdmSismo:
     def __init__(self, gestor_sismo):
         self.gestor_sismo = gestor_sismo
         self.sesion_prueba = sesion_prueba
+        
+    def opc_res_rev_manual(self):
+        self.habilitarVentana()
 
     def habilitarVentana(self):
         # Recibe dos valores: la lista de dicts y la lista de objetos
@@ -79,5 +82,3 @@ class PantallaAdmSismo:
         self.gestor_sismo.tomar_elecc_evento_sismico(evento_seleccionado, accion)
         print("Evento bloqueado exitosamente")
     
-    def opcRegResManual(self):
-        self.habilitarVentana()
