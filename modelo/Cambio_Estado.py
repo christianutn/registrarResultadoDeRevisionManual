@@ -9,9 +9,6 @@ class CambioEstado:
         self.empleado = empleado
 
     def esActual(self) -> bool:
-        """
-        Retorna True si el cambio está activo (sin fecha de fin).
-        """
         return self.fecha_hora_fin is None
 
     def es_pte_revision(self) -> bool:
@@ -23,16 +20,3 @@ class CambioEstado:
     def set_fecha_hora_fin(self, fecha_hora):
         self.fecha_hora_fin = fecha_hora
     
-
-    # @classmethod
-    # def new(cls, estado: Estado) -> 'CambioEstado':
-    #     """
-    #     Crea una nueva instancia con fecha de inicio actual.
-    #     """
-    #     return cls(datetime.now(), estado)
-
-    # @classmethod
-    # def crear(cls, nombre_estado, ambito):
-    #     from .Estado import Estado
-    #     estado = Estado(nombre_estado, ambito)
-    #     return cls(datetime.now(), estado)

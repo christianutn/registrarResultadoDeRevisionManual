@@ -19,6 +19,9 @@ class Estado:
     
     def esBloqueado(self):
         return self.nombre_estado == "bloqueado"
+    
+    def esRechazado(self):
+        return self.nombre_estado == "rechazado"
 
 # Función fuera de la clase para inicializar estados mock
 

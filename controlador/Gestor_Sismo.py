@@ -46,12 +46,21 @@ class GestorSismo:
         estado_recuperado = None
         
         for estado in estados:
-            if estado.esBloqueado() and estado.esAmbitoEventoSismico():
-                estado_recuperado = estado
-                break
+            if accion == "Rechazar evento":
+                if estado.esRechazado() and estado.esAmbitoEventoSismico():
+                    estado_recuperado = estado
+                    break
+            else:
+                if estado.esBloqueado() and estado.esAmbitoEventoSismico():
+                    estado_recuperado = estado
+                    break
                 
         empleado_logueado = self.buscar_usuario_logueado()
-        evento_seleccionado.bloquear(estado_recuperado, hora_actual, empleado_logueado)
+        if estado_recuperado == "rechazado":
+            evento_seleccionado.rechazar(estado_recuperado, hora_actual, empleado_logueado)
+        elif estado_recuperado == "bloqueado":
+            evento_seleccionado.bloquear(estado_recuperado, hora_actual, empleado_logueado)
+        
         self.evento_seleccionado = evento_seleccionado
         
     
@@ -81,4 +90,24 @@ class GestorSismo:
                 series_por_estacion[nombre_estacion] = []
             series_por_estacion[nombre_estacion].append(serie)
         return series_por_estacion
+    
+    def tomar_selecc_opc_accion(self, opcion):
+
+        if not self.validar_selecc_opc(opcion):
+            return False, "Debe seleccionar una acción válida."
+        if not self.validar_existencia_datos():
+            return False, "Faltan datos obligatorios: magnitud, alcance u origen de generación."
+        return True, "Acción válida y datos completos."
+
+    def validar_selecc_opc(self, opcion):
+        return opcion in ["Confirmar evento", "Rechazar evento", "Solicitar revisión a experto"]
+
+    def validar_existencia_datos(self):
+        datos_sismico = self.evento_seleccionado.obtener_datos_evento_sismico()
+        datos_evento = self.evento_seleccionado.obtener_datos_evento()
+        return bool(
+            datos_sismico.get("valor_magnitud") and
+            datos_evento.get("alcance_sismo") and
+            datos_evento.get("origen_generacion")
+        )
 
