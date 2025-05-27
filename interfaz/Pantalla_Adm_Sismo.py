@@ -6,37 +6,16 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import PySimpleGUI as sg
 from controlador.Gestor_Sismo import GestorSismo
 
-from modelo.Usuario import Usuario
-from modelo.Empleado import Empleado
-from modelo.Sesion import Sesion
-from datetime import datetime
-
-# Create a specific employee
-empleado_prueba = Empleado(
-    apellido="Perez",
-    mail="perez@example.com",
-    nombre="Juan",
-    telefono="123456789",
-    rol="Analista"
-)
-
-# Create a specific user and associate it with the employee
-usuario_prueba = Usuario(nombre="jperez", contraseña="1234", empleado=empleado_prueba)
-usuario_prueba.set_empleado(empleado_prueba)
-
-# Create a session and associate it with the user
-sesion_prueba = Sesion(fecha_hora_inicio=datetime.now(), fecha_hora_fin=None, usuario=usuario_prueba)
 
 class PantallaAdmSismo:
     def __init__(self, gestor_sismo):
         self.gestor_sismo = gestor_sismo
-        self.sesion_prueba = sesion_prueba
         
     def opc_res_rev_manual(self):
         self.habilitarVentana()
 
     def habilitarVentana(self):
-        # Recibe dos valores: la lista de dicts y la lista de objetos
+        
         datos_eventos_ordenados, eventos_objetos = self.gestor_sismo.registrarResRevManual()
         self.solicitar_elecc_evento_sismico(datos_eventos_ordenados, eventos_objetos)
 
