@@ -3,22 +3,13 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
-from modelo.Estado import Estado, inicializar_estados_mock
-from modelo.Alcance_Sismo import AlcanceSismo
-from modelo.Origen_De_Generacion import OrigenDeGeneracion
-from modelo.Estacion_Sismologica import EstacionSismologica
-from modelo.Serie_Temporal import SerieTemporal
-from modelo.Cambio_Estado import CambioEstado
-from modelo.Evento_Sismico import EventoSismico
-from controlador.Gestor_Sismo import GestorSismo
-from datetime import datetime
 import PySimpleGUI as sg
+from controlador.Gestor_Sismo import GestorSismo
+
 from modelo.Usuario import Usuario
 from modelo.Empleado import Empleado
 from modelo.Sesion import Sesion
-from modelo.Clasificacion_Sismo import ClasificacionSismo
-from interfaz.menu_opciones import mostrar_menu_opciones
-
+from datetime import datetime
 
 # Create a specific employee
 empleado_prueba = Empleado(

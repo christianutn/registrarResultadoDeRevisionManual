@@ -1,18 +1,16 @@
 from datetime import datetime
 from modelo.Estado import inicializar_estados_mock
-from modelo.Sesion import Sesion
 
 class GestorSismo:
     def __init__(self, sesion):
         self.eventos_sismicos = []
         self.sesion = sesion
-        self.evento_seleccionado = None
+        self.evento_seleccionado = None  
 
     def agregarEvento(self, evento):
         self.eventos_sismicos.append(evento)
     
     def registrarResRevManual(self):
-        # Llama al método que busca los datos de los eventos para revisar ordenados
         eventos_para_revisar = self.buscar_eventos_para_revisar()
         datos_eventos_para_revisar = self.buscar_datos_eventos_para_revisar(eventos_para_revisar)
         datos_eventos_ordenados = self.ordenar_eventos_fecha_hora_ocurrencia(datos_eventos_para_revisar)
@@ -31,7 +29,6 @@ class GestorSismo:
         return eventos_para_revisar
 
     def ordenar_eventos_fecha_hora_ocurrencia(self, datos_eventos):
-        # Ordena los datos por fecha y hora de ocurrencia usando un bucle for
         for i in range(len(datos_eventos)):
             for j in range(0, len(datos_eventos) - i - 1):
                 if datos_eventos[j]["fecha_hora_ocurrencia"] > datos_eventos[j + 1]["fecha_hora_ocurrencia"]:
@@ -40,6 +37,7 @@ class GestorSismo:
     
     def tomar_elecc_evento_sismico(self, evento_seleccionado, accion):
         self.cambiar_estado_evento_sismico(evento_seleccionado, accion)
+
         
         
     def cambiar_estado_evento_sismico(self, evento_seleccionado, accion):
@@ -53,7 +51,6 @@ class GestorSismo:
                 break
                 
         empleado_logueado = self.buscar_usuario_logueado()
-        # print(f"Empleado logueado: {empleado_logueado}")
         evento_seleccionado.bloquear(estado_recuperado, hora_actual, empleado_logueado)
         self.evento_seleccionado = evento_seleccionado
         
@@ -79,7 +76,7 @@ class GestorSismo:
     def clasificar_por_estacion(self, datos_series_temporales):
         series_por_estacion = {}
         for serie in datos_series_temporales:
-            nombre_estacion = serie[2] if len(serie) > 2 else 'SIN_NOMBRE'
+            nombre_estacion = serie[2] if len(serie) > 2 else 'SIN NOMBRE'
             if nombre_estacion not in series_por_estacion:
                 series_por_estacion[nombre_estacion] = []
             series_por_estacion[nombre_estacion].append(serie)
