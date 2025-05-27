@@ -68,7 +68,6 @@ class PantallaAdmSismo:
     
     def tomar_elecc_evento_sismico(self, evento_seleccionado, accion):
         if evento_seleccionado is None:
-            sg.popup("Hasta luego")
             return
         self.gestor_sismo.tomar_elecc_evento_sismico(evento_seleccionado, accion)
         print("Evento bloqueado exitosamente")
@@ -85,7 +84,6 @@ class PantallaAdmSismo:
                     texto += f"  Serie: {serie}\n"
         else:
             texto = str(datos_series)
-        # Nueva ventana con botones
         layout = [
             [sg.Multiline(texto, size=(80, 20), disabled=True)],
             [sg.Button("Ver mapa"), sg.Button("Modificar evento"), sg.Button("Siguiente"), sg.Button("Cancelar")]
@@ -105,8 +103,7 @@ class PantallaAdmSismo:
                 self.habilitar_opc_modificar_evento()
         window.close()
         if cerrar_todo:
-            return  # Sale completamente, no muestra la ventana de acción
-        # Directamente mostrar la ventana de acción y manejar la selección aquí
+            return  
         window_accion = self.solicitar_selecc_opc_accion()
         self.tomar_selecc_opc_accion(window_accion)
 
@@ -116,7 +113,7 @@ class PantallaAdmSismo:
             [sg.Button("Confirmar evento"), sg.Button("Rechazar evento"), sg.Button("Solicitar revisión a experto"), sg.Button("Cancelar")]
         ]
         window = sg.Window("Acción sobre evento sísmico", layout)
-        # Solo muestra la ventana y retorna el objeto window para que la selección se haga en el otro método
+        
         return window
 
     def tomar_selecc_opc_accion(self, window):    
@@ -125,12 +122,10 @@ class PantallaAdmSismo:
             if event in (sg.WINDOW_CLOSED, "Cancelar"):
                 break
             if event in ("Confirmar evento", "Rechazar evento", "Solicitar revisión a experto"):
-                # Validar la acción con el gestor
                 valido, mensaje = self.gestor_sismo.tomar_selecc_opc_accion(event)
                 if not valido:
                     sg.popup(mensaje)
                     continue
-                # Si es válido, cambiar el estado del evento
                 self.gestor_sismo.cambiar_estado_evento_sismico(self.gestor_sismo.evento_seleccionado, event)
                 if event == "Confirmar evento":
                     sg.popup("Evento confirmado. Estado actualizado y responsable registrado.")

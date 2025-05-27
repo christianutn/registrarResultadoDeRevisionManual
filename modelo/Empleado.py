@@ -4,7 +4,7 @@ class Empleado:
         self.mail = mail
         self.nombre = nombre
         self.telefono = telefono
-        self.rol = rol # CREAR CLASE ROL
+        self.rol = rol 
         
     def get_rol(self, descripcion_rol,nombre):
         self.descripcion_rol = descripcion_rol

@@ -9,7 +9,6 @@ class OrigenDeGeneracion:
     def get_nombre(self):
         return self.nombre
 
-# Función para inicializar orígenes de generación de sismos
 
 def inicializar_origenes_mock():
     return [

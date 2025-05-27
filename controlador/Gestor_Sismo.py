@@ -6,6 +6,7 @@ class GestorSismo:
         self.eventos_sismicos = []
         self.sesion = sesion
         self.evento_seleccionado = None  
+        self.empleado_logueado = None  
 
     def agregarEvento(self, evento):
         self.eventos_sismicos.append(evento)
@@ -17,7 +18,7 @@ class GestorSismo:
         return datos_eventos_ordenados, eventos_para_revisar
         
     
-    def buscar_datos_eventos_para_revisar(self, eventos_para_revisar): # GESTOR DEBE TENER ESTE MÉTODO 
+    def buscar_datos_eventos_para_revisar(self, eventos_para_revisar): 
         datos_eventos = [evento.obtener_datos_evento_sismico() for evento in eventos_para_revisar]
         return datos_eventos
     
@@ -50,19 +51,28 @@ class GestorSismo:
                 if estado.esRechazado() and estado.esAmbitoEventoSismico():
                     estado_recuperado = estado
                     break
+            elif accion == "Confirmar evento":
+                if estado.esConfirmado() and estado.esAmbitoEventoSismico():
+                    estado_recuperado = estado
+                    break
             else:
                 if estado.esBloqueado() and estado.esAmbitoEventoSismico():
                     estado_recuperado = estado
+                    self.empleado_logueado = self.buscar_usuario_logueado()
+                    
                     break
                 
-        empleado_logueado = self.buscar_usuario_logueado()
+    
         if estado_recuperado.nombre_estado == "rechazado":
-            evento_seleccionado.rechazar(estado_recuperado, hora_actual, empleado_logueado)
+            evento_seleccionado.rechazar(estado_recuperado, hora_actual, self.empleado_logueado)
         elif estado_recuperado.nombre_estado == "bloqueado":
-            evento_seleccionado.bloquear(estado_recuperado, hora_actual, empleado_logueado)
+            evento_seleccionado.bloquear(estado_recuperado, hora_actual, self.empleado_logueado)
+        elif estado_recuperado.nombre_estado == "confirmado":
+            evento_seleccionado.confirmar(estado_recuperado, hora_actual, self.empleado_logueado)
         
         self.evento_seleccionado = evento_seleccionado
         
+    
     
     def buscar_usuario_logueado(self):
         if self.sesion:
