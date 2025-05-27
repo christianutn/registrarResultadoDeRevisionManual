@@ -56,9 +56,9 @@ class GestorSismo:
                     break
                 
         empleado_logueado = self.buscar_usuario_logueado()
-        if estado_recuperado == "rechazado":
+        if estado_recuperado.nombre_estado == "rechazado":
             evento_seleccionado.rechazar(estado_recuperado, hora_actual, empleado_logueado)
-        elif estado_recuperado == "bloqueado":
+        elif estado_recuperado.nombre_estado == "bloqueado":
             evento_seleccionado.bloquear(estado_recuperado, hora_actual, empleado_logueado)
         
         self.evento_seleccionado = evento_seleccionado

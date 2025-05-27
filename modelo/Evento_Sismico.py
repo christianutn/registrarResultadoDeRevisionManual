@@ -71,7 +71,6 @@ class EventoSismico:
         }
 
 
-
     def agregar_cambio_estado(self, cambio):
         self.cambios_estado.append(cambio)
 
