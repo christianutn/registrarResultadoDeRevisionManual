@@ -2,6 +2,7 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from PySide6.QtWidgets import QApplication
 from controlador.Gestor_Sismo import GestorSismo
 from interfaz.Pantalla_Adm_Sismo import PantallaAdmSismo
 from interfaz.menu_opciones import mostrar_menu_opciones
@@ -123,16 +124,18 @@ usuario_prueba.set_empleado(empleado_prueba)
 sesion_prueba = Sesion(fecha_hora_inicio=datetime.now(), fecha_hora_fin=None, usuario=usuario_prueba)
 
 if __name__ == "__main__":
+    # Crear aplicación Qt
+    app = QApplication(sys.argv)
+    app.setStyle('Fusion')  # Estilo moderno
     
-    ruta_csv = "c:\\Users\\Martin Ferreyra\\OneDrive\\Desktop\\SISTEMAS\\TERCER AÑO\\DSI\\PRÁCTICO\\PPAI\\registrarResultadoDeRevisionManual\\eventos_sismicos.csv"
+    # Usar ruta relativa al archivo actual
+    ruta_csv = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'eventos_sismicos.csv')
     eventos_cargados = cargar_eventos_desde_csv(ruta_csv)
 
     gestor = GestorSismo(sesion_prueba)
 
-
     for evento in eventos_cargados:
         gestor.agregarEvento(evento)
-
 
     opcion = mostrar_menu_opciones()
     if opcion == "Registrar resultado de revisión manual":
@@ -140,4 +143,5 @@ if __name__ == "__main__":
         pantalla.opc_res_rev_manual()
     else:
         print("Saliendo del sistema.")
-        exit()
+    
+    sys.exit(0)
