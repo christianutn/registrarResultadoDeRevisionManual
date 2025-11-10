@@ -53,7 +53,9 @@ class EventoSismico:
             estado_actual.set_fecha_hora_fin(hora_actual)
         nuevo_cambio_estado = CambioEstado(hora_actual, estado_recuperado, empleado) # PATRON CREADOR
         self.cambio_estado.append(nuevo_cambio_estado)
-        self.estado_actual = nuevo_cambio_estado
+        # guardar también referencia al Estado actual (no sólo al CambioEstado)
+        # el objeto 'nuevo_cambio_estado.estado' es el Estado que representa el nuevo estado
+        self.estado_actual = nuevo_cambio_estado.estado
 
 
     def obtener_datos_evento_sismico(self):

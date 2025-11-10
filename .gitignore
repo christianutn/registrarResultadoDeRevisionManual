@@ -1,1 +1,30 @@
 __pycache__/
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python artifacts
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Editor/project files
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# PyInstaller
+dist/
+build/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# PySide6 / virtualenv scripts (avoid committing large binaries from venv)
+.venv/Scripts/
+venv/Scripts/

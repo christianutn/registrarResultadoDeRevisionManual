@@ -1,4 +1,5 @@
-import PySimpleGUI as sg
+# Use PySimpleGUIQt for improved appearance while keeping PySimpleGUI API
+from interfaz.sg_backend import sg
 
 def mostrar_menu_opciones():
     layout = [

@@ -3,7 +3,8 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
-import PySimpleGUI as sg
+# Use PySimpleGUIQt for a nicer Qt-based appearance; API stays compatible
+from interfaz.sg_backend import sg
 from controlador.Gestor_Sismo import GestorSismo
 
 
