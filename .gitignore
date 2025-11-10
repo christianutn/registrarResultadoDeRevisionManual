@@ -25,6 +25,7 @@ ENV/
 .venv*/
 .venv311/
 venv*/
+.venv_pyside/
 
 # Installer logs
 pip-log.txt
@@ -74,3 +75,13 @@ node_modules/
 .ropeproject/
 .mypy_cache/
 __pycache__/
+
+# Project specific
+*.pyc
+*.pyo
+.Python
+*.swp
+*.swo
+*~
+.env
+.env.local
