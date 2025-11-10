@@ -48,17 +48,17 @@ class GestorSismo:
         
         for estado in estados:
             if accion == "Rechazar evento":
-                if estado.esRechazado() and estado.esAmbitoEventoSismico():
+                if estado.esRechazado() and estado.esAmbitoEventoSismico(): # PATRÓN EXPERTO 
                     estado_recuperado = estado
                     break
             elif accion == "Confirmar evento":
-                if estado.esConfirmado() and estado.esAmbitoEventoSismico():
+                if estado.esConfirmado() and estado.esAmbitoEventoSismico(): # PATRÓN EXPERTO 
                     estado_recuperado = estado
                     break
             else:
-                if estado.esBloqueado() and estado.esAmbitoEventoSismico():
+                if estado.esBloqueado() and estado.esAmbitoEventoSismico(): # PATRÓN EXPERTO 
                     estado_recuperado = estado
-                    self.empleado_logueado = self.buscar_usuario_logueado()
+                    self.empleado_logueado = self.buscar_usuario_logueado() # PATRÓN EXPERTO
                     
                     break
                 
@@ -83,11 +83,11 @@ class GestorSismo:
     def get_fecha_hora_actual(self):
         return datetime.now()
     
-    def buscar_datos_evento(self):
+    def buscar_datos_evento(self): # PATRÓN CONTROLADOR
         datos_eventos = self.evento_seleccionado.obtener_datos_evento() 
         return datos_eventos
     
-    def buscar_datos_series_temporales(self):
+    def buscar_datos_series_temporales(self): # PATRÓN CONTROLADOR
         datos_series_temporales = self.evento_seleccionado.obtener_series_temporales()
         datos_series_temporales_clasificados = self.clasificar_por_estacion(datos_series_temporales)
         return datos_series_temporales_clasificados

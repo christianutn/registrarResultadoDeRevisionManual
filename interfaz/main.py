@@ -124,7 +124,8 @@ sesion_prueba = Sesion(fecha_hora_inicio=datetime.now(), fecha_hora_fin=None, us
 
 if __name__ == "__main__":
     
-    ruta_csv = "c:\\Users\\Martin Ferreyra\\OneDrive\\Desktop\\SISTEMAS\\TERCER AÑO\\DSI\\PRÁCTICO\\PPAI\\registrarResultadoDeRevisionManual\\eventos_sismicos.csv"
+    # Usar ruta relativa al repositorio para facilitar ejecución en diferentes entornos
+    ruta_csv = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'eventos_sismicos.csv')
     eventos_cargados = cargar_eventos_desde_csv(ruta_csv)
 
     gestor = GestorSismo(sesion_prueba)
