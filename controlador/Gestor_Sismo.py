@@ -62,21 +62,30 @@ class GestorSismo:
         
         for estado in estados:
             if accion == "Rechazar evento":
-                if estado.esRechazado() and estado.esAmbitoEventoSismico(): # PATRÓN EXPERTO 
+                # cuando se rechaza, el sistema debe bloquear el evento (según el CU)
+                if estado.esBloqueado() and estado.esAmbitoEventoSismico(): # PATRÓN EXPERTO 
                     estado_recuperado = estado
+                    self.empleado_logueado = self.buscar_usuario_logueado() # PATRÓN EXPERTO
                     break
             elif accion == "Confirmar evento":
                 if estado.esConfirmado() and estado.esAmbitoEventoSismico(): # PATRÓN EXPERTO 
                     estado_recuperado = estado
                     break
-            else:
-                if estado.esBloqueado() and estado.esAmbitoEventoSismico(): # PATRÓN EXPERTO 
+            elif accion == "Solicitar revisión a experto":
+                # mapear solicitud de revisión a bloqueo para que un responsable asuma la revisión
+                if estado.esBloqueado() and estado.esAmbitoEventoSismico():
                     estado_recuperado = estado
-                    self.empleado_logueado = self.buscar_usuario_logueado() # PATRÓN EXPERTO
-                    
+                    self.empleado_logueado = self.buscar_usuario_logueado()
                     break
+            else:
+                # otras acciones no cambian el estado
+                estado_recuperado = None
+                break
                 
     
+        if estado_recuperado is None:
+            # no se encontró un estado aplicable -> no hacemos cambios
+            return
         if estado_recuperado.nombre_estado == "rechazado":
             evento_seleccionado.rechazar(estado_recuperado, hora_actual, self.empleado_logueado)
         elif estado_recuperado.nombre_estado == "bloqueado":

@@ -1,3 +1,1 @@
-PySimpleGUIQt
-PySimpleGUI
-PySide6
+ttkbootstrap

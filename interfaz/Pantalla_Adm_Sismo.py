@@ -65,9 +65,15 @@ class PantallaAdmSismo:
     def tomar_elecc_evento_sismico(self, evento_seleccionado, accion):
         if evento_seleccionado is None:
             return
-        self.gestor_sismo.tomar_elecc_evento_sismico(evento_seleccionado, accion)
-        # Mensaje genérico: la acción de bloqueo ya no es una acción manual en la UI.
-        print(f"Acción tomada: {accion}")
+        # La selección sólo elige el evento; no debe cambiar su estado inmediatamente.
+        if accion == "Seleccionar":
+            # conservar la referencia al evento seleccionado en el gestor pero no cambiar su estado
+            self.gestor_sismo.evento_seleccionado = evento_seleccionado
+            print(f"Evento seleccionado: {evento_seleccionado}")
+        else:
+            # otras acciones sí disparan cambios de estado
+            self.gestor_sismo.tomar_elecc_evento_sismico(evento_seleccionado, accion)
+            print(f"Acción tomada: {accion}")
         self.mostrar_datos_evento_selecc()
 
     def mostrar_datos_evento_selecc(self):
@@ -95,57 +101,60 @@ class PantallaAdmSismo:
         else:
             texto = str(datos_series)
 
+        # Mostrar las 5 opciones según el CU: Ver mapa, Modificar evento, y las 3 acciones finales
         layout = [
             [sg.Multiline(texto, size=(100, 20), disabled=True)],
-            [sg.Button("Ver mapa"), sg.Button("Modificar evento"), sg.Button("Cancelar")]
+            [
+                sg.Button("Ver mapa"), sg.Button("Modificar evento"),
+                sg.Button("Confirmar evento"), sg.Button("Rechazar evento"), sg.Button("Solicitar revisión a experto"),
+                sg.Button("Cancelar")
+            ]
         ]
         window = sg.Window("Series temporales por estación", layout)
-        cerrar_todo = False
+        accion_seleccionada = None
         while True:
             event, _ = window.read()
             if event == sg.WINDOW_CLOSED or event == "Cancelar":
-                cerrar_todo = True
-                break
-            if event == "Siguiente":
-                break
+                window.close()
+                return
             if event == "Ver mapa":
                 self.habilitar_opc_mapa()
+                continue
             if event == "Modificar evento":
                 self.habilitar_opc_modificar_evento()
-        window.close()
-        if cerrar_todo:
-            return  
-        window_accion = self.solicitar_selecc_opc_accion()
-        self.tomar_selecc_opc_accion(window_accion)
-
-    def solicitar_selecc_opc_accion(self):
-        layout = [
-            [sg.Text("Seleccione una acción para el evento sísmico:")],
-            [sg.Button("Confirmar evento"), sg.Button("Rechazar evento"), sg.Button("Solicitar revisión a experto"), sg.Button("Cancelar")]
-        ]
-        window = sg.Window("Acción sobre evento sísmico", layout)
-        
-        return window
-
-    def tomar_selecc_opc_accion(self, window):    
-        while True:
-            event, _ = window.read()
-            if event in (sg.WINDOW_CLOSED, "Cancelar"):
-                break
+                continue
+            # Si es una acción final, guardar y salir del loop
             if event in ("Confirmar evento", "Rechazar evento", "Solicitar revisión a experto"):
-                valido, mensaje = self.gestor_sismo.tomar_selecc_opc_accion(event)
-                if not valido:
-                    sg.popup(mensaje)
-                    continue
-                self.gestor_sismo.cambiar_estado_evento_sismico(self.gestor_sismo.evento_seleccionado, event)
-                if event == "Confirmar evento":
-                    sg.popup("Evento confirmado. Estado actualizado y responsable registrado.")
-                elif event == "Rechazar evento":
-                    sg.popup("Evento rechazado. Estado actualizado y responsable registrado.")
-                elif event == "Solicitar revisión a experto":
-                    sg.popup("Revisión a experto solicitada. Estado actualizado y responsable registrado.")
+                accion_seleccionada = event
                 break
         window.close()
+        
+        # Si se seleccionó una acción final, procesarla según el diagrama de secuencia
+        if accion_seleccionada:
+            self.tomar_selecc_opc_accion(accion_seleccionada)
+    
+
+    def tomar_selecc_opc_accion(self, accion):
+        """
+        Procesa la acción seleccionada por el usuario: valida los datos y cambia el estado del evento.
+        Según el diagrama de secuencia, este método valida y luego llama a cambiar_estado_evento_sismico.
+        """
+        # Validar la acción seleccionada
+        valido, mensaje = self.gestor_sismo.tomar_selecc_opc_accion(accion)
+        if not valido:
+            sg.popup(mensaje)
+            return
+        
+        # Cambiar el estado del evento
+        self.gestor_sismo.cambiar_estado_evento_sismico(self.gestor_sismo.evento_seleccionado, accion)
+        
+        # Mostrar confirmación
+        if accion == "Confirmar evento":
+            sg.popup("Evento confirmado. Estado actualizado y responsable registrado.")
+        elif accion == "Rechazar evento":
+            sg.popup("Evento rechazado. Estado actualizado y responsable registrado.")
+        elif accion == "Solicitar revisión a experto":
+            sg.popup("Revisión a experto solicitada. Estado actualizado y responsable registrado.")
 
     def habilitar_opc_mapa(self):
         sg.popup("Opción de mapa habilitada para el evento seleccionado. Acá se mostraría el mapa con la ubicación del evento y estaciones asociadas")
