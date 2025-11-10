@@ -149,7 +149,6 @@ class MainWindow(QMainWindow):
         btn_layout.setSpacing(12)
         
         self.btn_block = QPushButton('🔒 Bloquear')
-        self.btn_details = QPushButton('🔍 Detalles')
         
         self.btn_confirm = QPushButton('✅ Confirmar')
         self.btn_confirm.setObjectName('confirmBtn')
@@ -161,7 +160,6 @@ class MainWindow(QMainWindow):
         self.btn_expert.setObjectName('expertBtn')
 
         btn_layout.addWidget(self.btn_block)
-        btn_layout.addWidget(self.btn_details)
         btn_layout.addStretch(1)
         btn_layout.addWidget(self.btn_confirm)
         btn_layout.addWidget(self.btn_reject)
@@ -170,7 +168,6 @@ class MainWindow(QMainWindow):
 
         # Conectar señales
         self.btn_block.clicked.connect(self.block_event)
-        self.btn_details.clicked.connect(self.view_details)
         self.btn_confirm.clicked.connect(self.confirm_event)
         self.btn_reject.clicked.connect(self.reject_event)
         self.btn_expert.clicked.connect(self.request_expert)
@@ -253,25 +250,7 @@ class MainWindow(QMainWindow):
             
             self.show_success('Evento bloqueado correctamente')
 
-    def view_details(self):
-        s = self.selected_row()
-        if not s:
-            self.show_warning('Seleccione un evento de la tabla.')
-            return
-        
-        msg = QMessageBox(self)
-        msg.setWindowTitle('📋 Detalles del Evento Sísmico')
-        msg.setIcon(QMessageBox.Information)
-        msg.setText(f"""
-        <h3 style='color: #1976d2;'>Información del Evento</h3>
-        <table style='margin-top: 10px;'>
-            <tr><td style='padding: 5px; font-weight: 600;'>📅 Fecha:</td><td style='padding: 5px;'>{s['fecha']}</td></tr>
-            <tr><td style='padding: 5px; font-weight: 600;'>📍 Epicentro:</td><td style='padding: 5px;'>{s['epic']}</td></tr>
-            <tr><td style='padding: 5px; font-weight: 600;'>🌐 Hipocentro:</td><td style='padding: 5px;'>{s['hipo']}</td></tr>
-            <tr><td style='padding: 5px; font-weight: 600;'>📏 Magnitud:</td><td style='padding: 5px;'>{s['mag']}</td></tr>
-        </table>
-        """)
-        msg.exec()
+    # view_details removed: functionality removed per user request
 
     def confirm_event(self):
         s = self.selected_row()
