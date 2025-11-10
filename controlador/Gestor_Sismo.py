@@ -19,7 +19,21 @@ class GestorSismo:
         
     
     def buscar_datos_eventos_para_revisar(self, eventos_para_revisar): 
-        datos_eventos = [evento.obtener_datos_evento_sismico() for evento in eventos_para_revisar]
+        datos_eventos = []
+        for evento in eventos_para_revisar:
+            datos_sismico = {}
+            try:
+                datos_sismico = evento.obtener_datos_evento_sismico() or {}
+            except Exception:
+                datos_sismico = {}
+            datos_meta = {}
+            try:
+                datos_meta = evento.obtener_datos_evento() or {}
+            except Exception:
+                datos_meta = {}
+            # fusiono datos sismicos con metadatos (alcance, origen, clasificacion)
+            merged = {**datos_sismico, **datos_meta}
+            datos_eventos.append(merged)
         return datos_eventos
     
     def buscar_eventos_para_revisar(self):
