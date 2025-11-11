@@ -32,6 +32,9 @@ class EventoSismico:
 
     def get_longitud_hipocentro(self):
         return self.longitud_hipocentro
+    
+    def get_valor_magnitud(self):
+        return self.valor_magnitud
 
     def get_estado_actual(self):   
         return self.estado_actual
@@ -60,13 +63,12 @@ class EventoSismico:
 
     def obtener_datos_evento_sismico(self):
         return {
-            "fecha_hora_ocurrencia": self.fecha_hora_ocurrencia,
-            "latitud_epicentro": self.latitud_epicentro,
-            "longitud_epicentro": self.longitud_epicentro,
-            "latitud_hipocentro": self.latitud_hipocentro,
-            "longitud_hipocentro": self.longitud_hipocentro,
-            "valor_magnitud": self.valor_magnitud
-            
+            "fecha_hora_ocurrencia": self.get_fecha_hora_ocurrencia(),
+            "latitud_epicentro": self.get_latitud_epicentro(),
+            "longitud_epicentro": self.get_longitud_epicentro(),
+            "latitud_hipocentro": self.get_latitud_hipocentro(),
+            "longitud_hipocentro": self.get_longitud_hipocentro(),
+            "valor_magnitud": self.get_valor_magnitud()
         }
         
     def obtener_datos_evento(self):
