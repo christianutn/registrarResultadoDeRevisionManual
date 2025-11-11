@@ -2,112 +2,22 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QMessageBox
 from controlador.Gestor_Sismo import GestorSismo
 from interfaz.Pantalla_Adm_Sismo import PantallaAdmSismo
 from interfaz.menu_opciones import mostrar_menu_opciones
 from modelo.Sesion import Sesion
 from modelo.Usuario import Usuario
 from modelo.Empleado import Empleado
-from modelo.Estado import inicializar_estados_mock
 from datetime import datetime
-import csv
-import random
-from modelo.Evento_Sismico import EventoSismico
-from modelo.Cambio_Estado import CambioEstado
 
-def cargar_eventos_desde_csv(ruta_csv):
-    eventos = []
-    estados_disponibles = inicializar_estados_mock()
-    from modelo.Serie_Temporal import SerieTemporal
-    from modelo.Muestra_Sismica import MuestraSismica
-    from modelo.Detalle_Muestra_Sismica import DetalleMuestraSismica
-    from modelo.Tipo_De_Dato import TipoDeDato
-    from modelo.Estacion_Sismologica import EstacionSismologica
-    from modelo.Sismografo import Sismografo
-    from datetime import timedelta
+# Importar configuración de base de datos
+from config.db import get_session
+from models.evento_sismico_model import EventoSismico as EventoSismicoModel
+from utils.mappers import evento_model_to_entity
 
-    denominaciones = ["Velocidad de onda", "Frecuencia de onda", "Longitud"]
-    unidades = ["km/seg", "Hz", "km/ciclo"]
-
-    with open(ruta_csv, mode='r', encoding='utf-8') as archivo:
-        lector = csv.DictReader(archivo)
-        for fila in lector:
-            evento = EventoSismico(
-                fecha_hora_ocurrencia=datetime.strptime(fila['fecha_hora_ocurrencia'], '%Y-%m-%d %H:%M:%S'),
-                latitud_epicentro=float(fila['latitud_epicentro']),
-                longitud_epicentro=float(fila['longitud_epicentro']),
-                latitud_hipocentro=float(fila['latitud_hipocentro']),
-                longitud_hipocentro=float(fila['longitud_hipocentro']),
-                valor_magnitud=float(fila['valor_magnitud']),
-                cambio_estado=[]
-            )
-            evento.validar_y_asignar_clasificacion(fila['clasificacion_sismo'])
-            evento.validar_y_asignar_origen(fila['origen_de_generacion'])
-            evento.validar_y_asignar_alcance(fila['alcance_sismo'])
-
-            estado_inicial = random.choice(estados_disponibles)
-            if estado_inicial:
-                cambio_estado_inicial = CambioEstado(
-                    fecha_hora_inicio=datetime.now(),
-                    estado=estado_inicial,
-                    empleado=None
-                )
-                evento.cambio_estado.append(cambio_estado_inicial)
-                evento.estado_actual = cambio_estado_inicial
-
-            
-            for i in range(1, random.randint(2, 4)):
-                
-                estacion = EstacionSismologica(
-                    codigo_estacion=f"EST-{random.randint(100,999)}",
-                    documento_certificacion_adq=f"DOC-{random.randint(1000,9999)}",
-                    fecha_solicitud_certificacion=datetime.now().date(),
-                    latitud=evento.latitud_epicentro,
-                    longitud=evento.longitud_epicentro,
-                    nombre=f"Estacion-{random.randint(1,10)}",
-                    nro_certificacion_adquisicion=f"CERT-{random.randint(1000,9999)}"
-                )
-                
-                sismografo = Sismografo(
-                    fecha_adquisicion=datetime.now().date(),
-                    identificador_sismografo=f"SIS-{random.randint(1000,9999)}",
-                    nro_serie=f"SN-{random.randint(10000,99999)}"
-                )
-                sismografo.estacion_sismologica = estacion
-
-                serie = SerieTemporal(
-                    condicion_alarma=f"Alarma {i}",
-                    fecha_hora_inicio_registro_muestras=evento.fecha_hora_ocurrencia,
-                    fecha_hora_registro=evento.fecha_hora_ocurrencia + timedelta(minutes=i*5),
-                    frecuencia_muestreo=100 + i*10
-                )
-                
-                serie.set_sismografo(sismografo)
-                sismografo.series_temporales.append(serie)
-                
-                for j in range(1, random.randint(2, 4)):
-                    muestra = MuestraSismica(
-                        fecha_hora_muestra=evento.fecha_hora_ocurrencia + timedelta(minutes=i*5 + j)
-                    )
-                    
-                    for idx in range(3):
-                        valor = round(random.uniform(0.1, 10.0), 2)
-                        detalle = DetalleMuestraSismica(valor=valor)
-                        tipo_dato = TipoDeDato(
-                            denominacion=denominaciones[idx],
-                            nombre_unidad_medida=unidades[idx],
-                            valor_umbral=round(random.uniform(1.0, 5.0), 2)
-                        )
-                        detalle.set_tipo_de_dato(tipo_dato)
-                        muestra.agregar_detalle_muestra(detalle)
-                    serie.agregar_muestra_sismica(muestra)
-                evento.agregar_serie_temporal(serie)
-
-            eventos.append(evento)
-    return eventos
-
-
+# TODO: Reemplazar datos mock por login real
+# Ejemplo de sesión de prueba
 empleado_prueba = Empleado(
     apellido="Perez",
     mail="perez@example.com",
@@ -116,10 +26,8 @@ empleado_prueba = Empleado(
     rol="Analista"
 )
 
-
 usuario_prueba = Usuario(nombre="jperez", contraseña="1234", empleado=empleado_prueba)
 usuario_prueba.set_empleado(empleado_prueba)
-
 
 sesion_prueba = Sesion(fecha_hora_inicio=datetime.now(), fecha_hora_fin=None, usuario=usuario_prueba)
 
@@ -128,20 +36,50 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setStyle('Fusion')  # Estilo moderno
     
-    # Usar ruta relativa al archivo actual
-    ruta_csv = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'eventos_sismicos.csv')
-    eventos_cargados = cargar_eventos_desde_csv(ruta_csv)
-
-    gestor = GestorSismo(sesion_prueba)
-
-    for evento in eventos_cargados:
-        gestor.agregarEvento(evento)
-
-    opcion = mostrar_menu_opciones()
-    if opcion == "Registrar resultado de revisión manual":
-        pantalla = PantallaAdmSismo(gestor)
-        pantalla.opc_res_rev_manual()
-    else:
-        print("Saliendo del sistema.")
+    print("🔄 Cargando eventos desde MySQL...")
+    
+    try:
+        # Cargar eventos desde base de datos MySQL
+        db_session = get_session()
+        eventos_db = db_session.query(EventoSismicoModel).all()
+        
+        print(f"✅ Encontrados {len(eventos_db)} eventos en la base de datos")
+        
+        # Convertir modelos a entidades del dominio
+        eventos_cargados = []
+        for evento_model in eventos_db:
+            try:
+                evento_entidad = evento_model_to_entity(evento_model)
+                eventos_cargados.append(evento_entidad)
+            except Exception as e:
+                print(f"⚠️ Error convirtiendo evento {evento_model.id}: {e}")
+        
+        db_session.close()
+        
+        print(f"✅ Convertidos {len(eventos_cargados)} eventos correctamente")
+        
+        # Crear gestor y cargar eventos
+        gestor = GestorSismo(sesion_prueba)
+        for evento in eventos_cargados:
+            gestor.agregarEvento(evento)
+        
+        print(f"✅ Eventos cargados en el gestor: {len(gestor.eventos_sismicos)}")
+        
+        # Mostrar menú y ejecutar opción
+        opcion = mostrar_menu_opciones()
+        if opcion == "Registrar resultado de revisión manual":
+            pantalla = PantallaAdmSismo(gestor)
+            pantalla.opc_res_rev_manual()
+        else:
+            print("Saliendo del sistema.")
+    
+    except Exception as e:
+        print(f"❌ Error conectando a la base de datos: {e}")
+        QMessageBox.critical(
+            None,
+            "Error de Conexión",
+            f"No se pudo conectar a la base de datos:\n{str(e)}\n\nVerifica:\n- MySQL está corriendo\n- Credenciales en config/db.py\n- Base de datos existe"
+        )
+        sys.exit(1)
     
     sys.exit(0)

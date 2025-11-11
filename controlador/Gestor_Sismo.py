@@ -1,6 +1,10 @@
 from datetime import datetime
 from modelo.Estado import inicializar_estados_mock
 
+# TODO: Cuando se implemente la capa de persistencia, considerar:
+# from config.db import get_session
+# from models.estado_model import EstadoModel
+
 class GestorSismo:
     def __init__(self, sesion):
         self.eventos_sismicos = []
@@ -37,6 +41,13 @@ class GestorSismo:
         return datos_eventos
     
     def buscar_eventos_para_revisar(self):
+        # TODO: Reemplazar por consulta a base de datos:
+        # db_session = get_session()
+        # eventos_db = db_session.query(EventoSismicoModel).filter(
+        #     EventoSismicoModel.estado.in_(['pendiente_revision', 'auto_detectado'])
+        # ).all()
+        # return [convertir_modelo_a_entidad(e) for e in eventos_db]
+        
         eventos_para_revisar = []
         for evento in self.eventos_sismicos:
             if evento.buscar_eventos_para_revisar():
@@ -57,6 +68,9 @@ class GestorSismo:
         
     def cambiar_estado_evento_sismico(self, evento_seleccionado, accion):
         hora_actual = self.get_fecha_hora_actual()
+        
+        # TODO: Considerar cargar estados desde BD si son configurables
+        # Por ahora, los estados son datos de catálogo (mock está bien)
         estados = inicializar_estados_mock()
         estado_recuperado = None
         

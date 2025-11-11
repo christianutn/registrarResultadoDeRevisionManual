@@ -1,1 +1,4 @@
-ttkbootstrap
+PySide6>=6.6.0
+SQLAlchemy>=2.0.0
+pymysql>=1.1.0
+cryptography>=41.0.0
