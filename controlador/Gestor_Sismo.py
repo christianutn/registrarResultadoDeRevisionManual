@@ -18,58 +18,41 @@ class GestorSismo:
         self.eventos_sismicos.append(evento)
     
     def registrarResRevManual(self):
-        eventos_para_revisar = self.buscar_eventos_pendientes_revision()
-        datos_eventos_para_revisar = self.buscar_datos_eventos_para_revisar(eventos_para_revisar)
+        datos_eventos_para_revisar, eventos_para_revisar = self.buscar_eventos_para_revisar()
         datos_eventos_ordenados = self.ordenar_eventos_fecha_hora_ocurrencia(datos_eventos_para_revisar)
         return datos_eventos_ordenados, eventos_para_revisar
         
     
-    def buscar_datos_eventos_para_revisar(self, eventos_para_revisar): 
-        datos_eventos = []
-        for evento in eventos_para_revisar:
-            datos_sismico = {}
-            try:
-                datos_sismico = evento.obtener_datos_evento_sismico() or {}
-            except Exception:
-                datos_sismico = {}
-            datos_meta = {}
-            try:
-                datos_meta = evento.obtener_datos_evento() or {}
-            except Exception:
-                datos_meta = {}
-            # fusiono datos sismicos con metadatos (alcance, origen, clasificacion)
-            merged = {**datos_sismico, **datos_meta}
-            datos_eventos.append(merged)
-        return datos_eventos
+    def buscar_datos_eventos_para_revisar(self, evento): 
+        """Obtiene los datos de un evento sísmico."""
+        return evento.obtener_datos_evento_sismico() or {}
     
     def buscar_eventos_para_revisar(self):
-        # TODO: Reemplazar por consulta a base de datos:
-        # db_session = get_session()
-        # eventos_db = db_session.query(EventoSismicoModel).filter(
-        #     EventoSismicoModel.estado.in_(['pendiente_revision', 'auto_detectado'])
-        # ).all()
-        # return [convertir_modelo_a_entidad(e) for e in eventos_db]
-        
-        # Definir los filtros según las condiciones del CU:
-        # 1. El cambio de estado debe ser actual (sin fecha_hora_fin)
-        # 2. El estado debe ser "pendiente_revision" o "auto_detectado"
-        def filtro_cambio_estado_actual(evento):
-            return evento.es_pendiente_o_autodetectado()
-        
-        
-        # Crear iterador y aplicar filtros
+        """
+        Retorna:
+            Tupla con (lista de diccionarios con datos, lista de objetos EventoSismico)
+        """
+        # Crear iterador 
         it = self.crearIterador(self.eventos_sismicos)
         it.primero()
+        datos_eventos_para_revisar = []
         eventos_para_revisar = []
         
-        filtros = [filtro_cambio_estado_actual]
-        
+        # Recorrer la colección usando el iterador
         while not it.ha_finalizado():
+            # elemento_actual() aplica el filtro internamente
             evento = it.elemento_actual()
-            if it.comprobar_filtro(filtros):
-                eventos_para_revisar.append(evento)
+            
+            # Solo agregar si el evento no es None (cumple el filtro)
+            if evento is not None:
+                datos_evento = self.buscar_datos_eventos_para_revisar(evento)
+                datos_eventos_para_revisar.append(datos_evento)
+                eventos_para_revisar.append(evento)  
+
+            # Avanzar al siguiente elemento
             it.siguiente()
-        return eventos_para_revisar
+            
+        return datos_eventos_para_revisar, eventos_para_revisar
 
     def crearIterador(self, eventos_sismicos):
         return IteradorEventoSismico(eventos_sismicos)

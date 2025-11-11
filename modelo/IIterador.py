@@ -4,7 +4,7 @@ class IIterador:
     def elemento_actual(self) -> Any:
         raise NotImplementedError
 
-    def comprobar_filtro(self, filtros: List[Any]) -> bool:
+    def comprobar_filtro(self) -> bool:
         raise NotImplementedError
 
     def ha_finalizado(self) -> bool:
