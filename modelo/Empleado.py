@@ -4,12 +4,16 @@ class Empleado:
         self.mail = mail
         self.nombre = nombre
         self.telefono = telefono
-        self.rol = rol 
+        self.rol = rol
+        self.usuario = None  # Referencia al usuario asociado
         
     def get_rol(self, descripcion_rol,nombre):
         self.descripcion_rol = descripcion_rol
         self.nombre = nombre
 
+    def set_usuario(self, usuario):
+        """Establece la referencia al usuario asociado"""
+        self.usuario = usuario
     
     def get_empleado(self):
         return {

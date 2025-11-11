@@ -7,12 +7,14 @@ from .mappers import (
     evento_model_to_entity,
     cambio_estado_model_to_entity,
     empleado_model_to_entity,
-    usuario_model_to_entity
+    usuario_model_to_entity,
+    guardar_cambio_estado_en_bd
 )
 
 __all__ = [
     'evento_model_to_entity',
     'cambio_estado_model_to_entity',
     'empleado_model_to_entity',
-    'usuario_model_to_entity'
+    'usuario_model_to_entity',
+    'guardar_cambio_estado_en_bd'
 ]

@@ -1,5 +1,6 @@
 from datetime import datetime
 from modelo.Estado import inicializar_estados_mock
+from utils.mappers import guardar_cambio_estado_en_bd
 
 # TODO: Cuando se implemente la capa de persistencia, considerar:
 # from config.db import get_session
@@ -106,6 +107,17 @@ class GestorSismo:
             evento_seleccionado.bloquear(estado_recuperado, hora_actual, self.empleado_logueado)
         elif estado_recuperado.nombre_estado == "confirmado":
             evento_seleccionado.confirmar(estado_recuperado, hora_actual, self.empleado_logueado)
+        
+        # Guardar el cambio de estado en la base de datos
+        if hasattr(evento_seleccionado, 'id_bd'):
+            print(f"\n💾 Guardando cambio de estado en BD...")
+            exito = guardar_cambio_estado_en_bd(evento_seleccionado, evento_seleccionado.id_bd)
+            if exito:
+                print(f"✅ Estado actualizado correctamente en la base de datos\n")
+            else:
+                print(f"❌ Error al guardar en la base de datos\n")
+        else:
+            print("⚠️  Evento sin ID de BD, no se puede persistir el cambio")
         
         self.evento_seleccionado = evento_seleccionado
         

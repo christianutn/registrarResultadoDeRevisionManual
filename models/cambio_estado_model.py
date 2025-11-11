@@ -1,8 +1,6 @@
 from sqlalchemy import Column, Integer, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
+from config.db import Base
 
 class CambioEstado(Base):
     __tablename__ = 'cambio_estado'
