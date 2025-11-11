@@ -56,33 +56,48 @@ class PantallaAdmSismo:
         self.mostrar_datos_evento_selecc()
 
     def mostrar_datos_evento_selecc(self):
+        datos_evento = self.gestor_sismo.buscar_datos_evento()
         datos_series = self.gestor_sismo.buscar_datos_series_temporales()
-        print("Datos de series temporales obtenidos exitosamente")
+        print("Datos del evento y series temporales obtenidos exitosamente")
         
-        texto = ""
+        # Construir texto para datos del evento
+        texto_evento = "📊 INFORMACIÓN DEL EVENTO SÍSMICO\n"
+        texto_evento += "=" * 50 + "\n\n"
+        
+        if isinstance(datos_evento, dict):
+            texto_evento += f"📍 Alcance: {datos_evento.get('alcance_sismo', 'N/D')}\n"
+            texto_evento += f"🌋 Origen: {datos_evento.get('origen_generacion', 'N/D')}\n"
+            texto_evento += f"📐 Clasificación: {datos_evento.get('clasificacion_sismo', 'N/D')}\n"
+        else:
+            texto_evento += str(datos_evento) + "\n"
+        
+        # Construir texto para series temporales
+        texto_series = "\n\n📡 SERIES TEMPORALES POR ESTACIÓN\n"
+        texto_series += "=" * 50 + "\n"
+        
         if isinstance(datos_series, dict):
             for estacion, series in datos_series.items():
-                texto += f"\nEstación: {estacion}\n"
+                texto_series += f"\n🏢 Estación: {estacion}\n"
+                texto_series += "-" * 40 + "\n"
                 for serie in series:
-                    # espero estructura [muestras, codigo, nombre]
                     try:
                         muestras = serie[0]
                         codigo = serie[1]
                         nombre = serie[2]
                     except Exception:
-                        texto += f"  Serie: {serie}\n"
+                        texto_series += f"  Serie: {serie}\n"
                         continue
-                    texto += f"  Código: {codigo} | Nombre: {nombre}\n"
-                    texto += f"    Cantidad de muestras: {len(muestras) if hasattr(muestras, '__len__') else 'N/D'}\n"
-                    # muestro hasta 2 ejemplos de muestras por serie
+                    texto_series += f"  📟 Código: {codigo} | Nombre: {nombre}\n"
+                    texto_series += f"  📊 Cantidad de muestras: {len(muestras) if hasattr(muestras, '__len__') else 'N/D'}\n"
+                    # Mostrar hasta 2 ejemplos de muestras por serie
                     if hasattr(muestras, '__iter__'):
                         for i, muestra in enumerate(list(muestras)[:2]):
-                            texto += f"      Ejemplo muestra {i+1}: {muestra}\n"
+                            texto_series += f"    • Ejemplo muestra {i+1}: {muestra}\n"
         else:
-            texto = str(datos_series)
+            texto_series += str(datos_series)
 
         # Crear el diálogo de detalles
-        dialog = EventDetailsDialog(texto, self)
+        dialog = EventDetailsDialog(texto_evento, texto_series, self)
         dialog.exec()
     
 
@@ -337,8 +352,9 @@ class EventSelectorDialog(QDialog):
 class EventDetailsDialog(QDialog):
     """Diálogo para mostrar detalles del evento y acciones"""
     
-    def __init__(self, texto_series, pantalla_adm):
+    def __init__(self, texto_evento, texto_series, pantalla_adm):
         super().__init__()
+        self.texto_evento = texto_evento
         self.texto_series = texto_series
         self.pantalla_adm = pantalla_adm
         self.accion_seleccionada = None
@@ -430,7 +446,7 @@ class EventDetailsDialog(QDialog):
         layout.setContentsMargins(25, 25, 25, 25)
         
         # Título
-        title = QLabel("Series Temporales")
+        title = QLabel("Detalles del Evento Sísmico")
         title_font = QFont("Segoe UI", 16, QFont.Bold)
         title.setFont(title_font)
         title.setAlignment(Qt.AlignCenter)
@@ -438,12 +454,21 @@ class EventDetailsDialog(QDialog):
         
         layout.addSpacerItem(QSpacerItem(20, 8, QSizePolicy.Minimum, QSizePolicy.Fixed))
         
-        # TextEdit con los datos formateados
-        self.text_edit = QTextEdit()
-        self.text_edit.setHtml(self._format_series_data(self.texto_series))
-        self.text_edit.setReadOnly(True)
-        self.text_edit.setMaximumHeight(280)  # Más compacto
-        layout.addWidget(self.text_edit)
+        # TextEdit con los datos del evento
+        self.text_edit_evento = QTextEdit()
+        self.text_edit_evento.setPlainText(self.texto_evento)
+        self.text_edit_evento.setReadOnly(True)
+        self.text_edit_evento.setMaximumHeight(120)
+        layout.addWidget(self.text_edit_evento)
+        
+        layout.addSpacerItem(QSpacerItem(20, 8, QSizePolicy.Minimum, QSizePolicy.Fixed))
+        
+        # TextEdit con las series temporales formateadas
+        self.text_edit_series = QTextEdit()
+        self.text_edit_series.setHtml(self._format_series_data(self.texto_series))
+        self.text_edit_series.setReadOnly(True)
+        self.text_edit_series.setMaximumHeight(200)
+        layout.addWidget(self.text_edit_series)
         
         layout.addSpacerItem(QSpacerItem(20, 12, QSizePolicy.Minimum, QSizePolicy.Fixed))
         
