@@ -54,31 +54,15 @@ class GestorSismo:
         # 1. El cambio de estado debe ser actual (sin fecha_hora_fin)
         # 2. El estado debe ser "pendiente_revision" o "auto_detectado"
         def filtro_cambio_estado_actual(evento):
-            """Verifica si el evento tiene un cambio de estado actual"""
-            if not evento.cambio_estado:
-                return False
-            # Buscar el cambio de estado actual (sin fecha_hora_fin)
-            for cambio in evento.cambio_estado:
-                if cambio.esActual():
-                    return True
-            return False
+            return evento.es_pendiente_o_autodetectado()
         
-        def filtro_estado_pendiente_o_autodetectado(evento):
-            """Verifica si el estado actual es pendiente_revision o auto_detectado"""
-            if not evento.cambio_estado:
-                return False
-            # Buscar el cambio de estado actual y verificar su estado
-            for cambio in evento.cambio_estado:
-                if cambio.esActual():
-                    return cambio.es_pte_revision() or cambio.es_auto_detectado()
-            return False
         
         # Crear iterador y aplicar filtros
         it = self.crearIterador(self.eventos_sismicos)
         it.primero()
         eventos_para_revisar = []
         
-        filtros = [filtro_cambio_estado_actual, filtro_estado_pendiente_o_autodetectado]
+        filtros = [filtro_cambio_estado_actual]
         
         while not it.ha_finalizado():
             evento = it.elemento_actual()
