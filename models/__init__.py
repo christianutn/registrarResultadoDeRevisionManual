@@ -1,0 +1,5 @@
+from models.alcance_sismo_model import AlcanceSismo
+from models.origen_de_generacion_model import OrigenDeGeneracion
+from models.clasificacion_sismo_model import ClasificacionSismo
+from models.cambio_estado_model import CambioEstado
+from models.evento_sismico_model import EventoSismico
