@@ -1,5 +1,6 @@
 from datetime import datetime
 from modelo.Estado import inicializar_estados_mock
+from modelo.IteradorEventoSismico import IteradorEventoSismico
 from utils.mappers import guardar_cambio_estado_en_bd
 
 # TODO: Cuando se implemente la capa de persistencia, considerar:
@@ -17,7 +18,7 @@ class GestorSismo:
         self.eventos_sismicos.append(evento)
     
     def registrarResRevManual(self):
-        eventos_para_revisar = self.buscar_eventos_para_revisar()
+        eventos_para_revisar = self.buscar_eventos_pendientes_revision()
         datos_eventos_para_revisar = self.buscar_datos_eventos_para_revisar(eventos_para_revisar)
         datos_eventos_ordenados = self.ordenar_eventos_fecha_hora_ocurrencia(datos_eventos_para_revisar)
         return datos_eventos_ordenados, eventos_para_revisar
@@ -49,11 +50,45 @@ class GestorSismo:
         # ).all()
         # return [convertir_modelo_a_entidad(e) for e in eventos_db]
         
+        # Definir los filtros según las condiciones del CU:
+        # 1. El cambio de estado debe ser actual (sin fecha_hora_fin)
+        # 2. El estado debe ser "pendiente_revision" o "auto_detectado"
+        def filtro_cambio_estado_actual(evento):
+            """Verifica si el evento tiene un cambio de estado actual"""
+            if not evento.cambio_estado:
+                return False
+            # Buscar el cambio de estado actual (sin fecha_hora_fin)
+            for cambio in evento.cambio_estado:
+                if cambio.esActual():
+                    return True
+            return False
+        
+        def filtro_estado_pendiente_o_autodetectado(evento):
+            """Verifica si el estado actual es pendiente_revision o auto_detectado"""
+            if not evento.cambio_estado:
+                return False
+            # Buscar el cambio de estado actual y verificar su estado
+            for cambio in evento.cambio_estado:
+                if cambio.esActual():
+                    return cambio.es_pte_revision() or cambio.es_auto_detectado()
+            return False
+        
+        # Crear iterador y aplicar filtros
+        it = self.crearIterador(self.eventos_sismicos)
+        it.primero()
         eventos_para_revisar = []
-        for evento in self.eventos_sismicos:
-            if evento.buscar_eventos_para_revisar():
+        
+        filtros = [filtro_cambio_estado_actual, filtro_estado_pendiente_o_autodetectado]
+        
+        while not it.ha_finalizado():
+            evento = it.elemento_actual()
+            if it.comprobar_filtro(filtros):
                 eventos_para_revisar.append(evento)
+            it.siguiente()
         return eventos_para_revisar
+
+    def crearIterador(self, eventos_sismicos):
+        return IteradorEventoSismico(eventos_sismicos)
 
     def ordenar_eventos_fecha_hora_ocurrencia(self, datos_eventos):
         for i in range(len(datos_eventos)):

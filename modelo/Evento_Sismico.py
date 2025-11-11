@@ -85,7 +85,7 @@ class EventoSismico:
     def buscar_datos_evento_sismico(self):
         return self.obtener_datos_evento()
 
-    def buscar_eventos_para_revisar(self):
+    def es_pendiente_o_autodetectado(self):
         for ce in self.cambio_estado:
             if ce.esActual():
                 self.estado_actual = ce
