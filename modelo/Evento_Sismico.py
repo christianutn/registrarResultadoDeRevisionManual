@@ -52,8 +52,13 @@ class EventoSismico:
         self.crear_cambio_estado(hora_actual, empleado, estado_actual, estado_recuperado)
         
     def crear_cambio_estado(self, hora_actual, empleado, estado_actual, estado_recuperado):
-        if estado_actual is not None:
-            estado_actual.set_fecha_hora_fin(hora_actual)
+        # Cerrar el cambio de estado anterior (no el Estado, sino el CambioEstado)
+        if self.cambio_estado:
+            # Obtener el último cambio de estado y cerrarlo
+            ultimo_cambio = self.cambio_estado[-1]
+            if hasattr(ultimo_cambio, 'set_fecha_hora_fin'):
+                ultimo_cambio.set_fecha_hora_fin(hora_actual)
+        
         nuevo_cambio_estado = CambioEstado(hora_actual, estado_recuperado, empleado) # PATRON CREADOR
         self.cambio_estado.append(nuevo_cambio_estado)
         # guardar también referencia al Estado actual (no sólo al CambioEstado)

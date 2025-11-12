@@ -65,13 +65,15 @@ class PantallaAdmSismo:
         if evento_seleccionado is None:
             return
         
-        # La selección sólo elige el evento; no debe cambiar su estado inmediatamente.
+        # Cuando se selecciona un evento, debe bloquearse y persistirse
         if accion == "Seleccionar":
-            # conservar la referencia al evento seleccionado en el gestor pero no cambiar su estado
+            # Conservar la referencia al evento seleccionado en el gestor
             self.gestor_sismo.evento_seleccionado = evento_seleccionado
             print(f"Evento seleccionado: {evento_seleccionado}")
+            # Cambiar el estado del evento a bloqueado y persistir
+            self.gestor_sismo.tomar_elecc_evento_sismico(evento_seleccionado, accion)
         else:
-            # otras acciones sí disparan cambios de estado
+            # otras acciones también disparan cambios de estado
             self.gestor_sismo.tomar_elecc_evento_sismico(evento_seleccionado, accion)
             print(f"Acción tomada: {accion}")
         

@@ -28,7 +28,9 @@ class GestorSismo:
         return evento.obtener_datos_evento_sismico() or {}
     
     def buscar_eventos_para_revisar(self):
+        
         """
+        Patrón Iterador
         Retorna:
             Tupla con (lista de diccionarios con datos, lista de objetos EventoSismico)
         """
@@ -42,6 +44,7 @@ class GestorSismo:
         while not it.ha_finalizado():
             # elemento_actual() aplica el filtro internamente
             evento = it.elemento_actual()
+
             
             # Solo agregar si el evento no es None (cumple el filtro)
             if evento is not None:
@@ -68,7 +71,6 @@ class GestorSismo:
         self.cambiar_estado_evento_sismico(evento_seleccionado, accion)
 
         
-        
     def cambiar_estado_evento_sismico(self, evento_seleccionado, accion):
         hora_actual = self.get_fecha_hora_actual()
         
@@ -78,9 +80,15 @@ class GestorSismo:
         estado_recuperado = None
         
         for estado in estados:
-            if accion == "Rechazar evento":
-                # cuando se rechaza, el sistema debe bloquear el evento (según el CU)
+            if accion == "Seleccionar":
+                # cuando se selecciona un evento, se bloquea para revisión
                 if estado.esBloqueado() and estado.esAmbitoEventoSismico(): # PATRÓN EXPERTO 
+                    estado_recuperado = estado
+                    self.empleado_logueado = self.buscar_usuario_logueado() # PATRÓN EXPERTO
+                    break
+            elif accion == "Rechazar evento":
+                # cuando se rechaza, el sistema debe cambiar a rechazado
+                if estado.esRechazado() and estado.esAmbitoEventoSismico(): # PATRÓN EXPERTO 
                     estado_recuperado = estado
                     self.empleado_logueado = self.buscar_usuario_logueado() # PATRÓN EXPERTO
                     break
@@ -123,7 +131,6 @@ class GestorSismo:
         
         self.evento_seleccionado = evento_seleccionado
         
-    
     
     def buscar_usuario_logueado(self):
         if self.sesion:
